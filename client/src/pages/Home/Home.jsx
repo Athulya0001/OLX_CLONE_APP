@@ -1,23 +1,12 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../ReduxStore/Reducers/authSlice";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar/Navbar";
+import CategoryMenu from "../../components/Category/Category";
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const {isAuthenticated,user} = useSelector(state=>state.auth.isAuthenticated)
-  const navigate = useNavigate()
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/')
-
-  };
   return (
-    <div>
-      <h1>Home</h1>{" "}
-      <div>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
+    <div className="flex flex-col justify-center items-center m-0">
+      <Navbar/>
+      <CategoryMenu/>
     </div>
   );
 };

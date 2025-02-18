@@ -18,7 +18,7 @@ const SignIn = () => {
     });
     const data = await response.json();
     if (data.success) {
-      dispatch(login({ email }));
+      dispatch(login({ email, user:data.user }));
       navigate("/home");
     } else {
       alert("User not found. Please sign up.");
