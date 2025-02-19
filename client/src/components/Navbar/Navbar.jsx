@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../ReduxStore/Reducers/authSlice";
 import { useNavigate } from "react-router-dom";
+import Logo from '../../assets/olx-logo.png'
 
 const Navbar = () => {
     const dispatch = useDispatch();
@@ -14,18 +15,16 @@ const Navbar = () => {
     };
 
     return (
-        <div className="flex justify-center items-center">
-            <nav className="bg-gray-100 fixed w-full z-50 p-2 shadow-md">
+        <div className="flex justify-center items-center fixed top-7">
+            <nav className="bg-gray-100 fixed w-full p-2 shadow-md">
                 <div className="mx-auto flex justify-between items-center">
                     <div className="flex items-center">
                         <div className="mr-4">
-                            {/* ✅ Fixed src typo */}
-                            {/* <img src= alt="Logo" className="h-10" /> */}
-                            <span>OLX</span>
+                            <img src={Logo} alt="Logo" className="h-10" />
+                            {/* <span>OLX</span> */}
                         </div>
                     </div>
 
-                    {/* Search Bar */}
                     <div className="relative hidden md:flex justify-between items-center border-2 border-gray-800 rounded-md bg-white w-2/5">
                         <input type="search" placeholder="Search products..." className="outline-none border-none px-2 py-1 w-64" />
                         <button className="ml-2 text-white bg-black px-3 py-3 h-full">
@@ -35,7 +34,6 @@ const Navbar = () => {
                         </button>
                     </div>
 
-                    {/* Language Selector */}
                     <div className="hidden md:flex items-center">
                         <span className="font-bold text-sm mr-1">ENGLISH</span>
                         <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

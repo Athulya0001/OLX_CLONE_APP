@@ -16,7 +16,21 @@ const UserSchema = new mongoose.Schema({
   },
   profileimg: {
     type: String,
+    default: '../public/images/profile-logo.webp'
   },
+  phone: {
+    type: String,
+    required: false,
+    unique: true,
+  },
+  productsadd: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }],
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }]
 });
 
 const User = mongoose.model("User", UserSchema);

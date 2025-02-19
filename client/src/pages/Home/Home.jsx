@@ -4,9 +4,10 @@ import CategoryMenu from "../../components/Category/Category";
 
 const Home = () => {
   return (
-    <div className="flex flex-col justify-center items-center m-0">
+    <div className="flex flex-col justify-center items-center">
       <Navbar/>
       <CategoryMenu/>
+      
     </div>
   );
 };
