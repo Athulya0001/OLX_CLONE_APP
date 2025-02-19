@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoConnect from './mongoConnect.js';
 import authRoutes from "./routes/authRoute.js"
 import productRoute from "./routes/productsRoute.js"
+import Product from './models/productModel.js';
 
 const app = express();
 
