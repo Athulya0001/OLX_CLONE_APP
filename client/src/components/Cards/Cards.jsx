@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Cards = ({ product }) => {
+  console.log(product,"cards")
     return (
       <div className="border p-4 rounded-md shadow-md cursor-pointer">
         <div className="flex justify-end">
@@ -15,7 +16,7 @@ const Cards = ({ product }) => {
   
         <p className="font-bold mt-2">&#x20B9; {product.price}</p>
         <span className="text-sm text-gray-500">{product.category}</span>
-        <p className="text-sm">{product.name}</p>
+        <p className="text-sm">{product.title}</p>
   
         <div className="flex justify-end text-xs text-gray-400">{product.date}</div>
       </div>

@@ -5,15 +5,18 @@ const productSchema = mongoose.Schema({
         type: String
     },
     price: {
-        type: Number
+        type: String
     },
     description: {
+        type: String
+    },
+    image: {
         type: String
     },
     category: {
         type: String,
         enum: ['vehicles', 'electronics', 'furniture', 'properties'],
-        default: 'electronics'
+        default: 'vehicles'
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,

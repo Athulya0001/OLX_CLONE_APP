@@ -1,12 +1,10 @@
 import Product from "../models/productModel.js"
 
-export const addProducts = async(req, res) =>{
+export const allProducts = async (req, res) => {
     try {
-        const existProducts = await Product.find();
-        if(existProducts){
-            res.status(200).json({message:"product found"})
-        }
-    } catch (error) {
-        res.status(500).json({message:"Server error"})
+      const products = await Product.find();
+      res.json(products);
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to fetch products', error: err.message });
     }
-}
+  }
