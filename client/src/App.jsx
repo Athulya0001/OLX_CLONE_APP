@@ -1,44 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import { Routes, Route} from 'react-router-dom'
-import Signin from './components/Signin/Signin'
-import Signup from './components/Signup/Signup'
-import Home from './pages/Home/Home'
-import Create from './components/Create/Create'
-
-
+import React, { useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Signin from "./components/Signin/Signin";
+import Signup from "./components/Signup/Signup";
+import Home from "./pages/Home/Home";
+import SelectCategory from "./components/Post/SelectCategory";
 const App = () => {
-
-  // const [products, setProducts] = useState([]);
-
-  // useEffect(()=>{
-  //   const handleProducts = async() =>{
-  //     const response = await fetch("http://localhost:3000/products", {
-  //       method: "GET",
-  //     });
-      
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch products");
-  //     }
-
-  //     const data = await response.json();
-  //     console.log(data)
-  //     setProducts(data);
-  // }
-  // handleProducts()
-  // },[])
-
-  
-  // handleProducts()
+  const navigate = useNavigate()
+  const token = JSON.parse(localStorage.getItem("token"))
+   useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Signin />} /> 
+        <Route path="/" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Home/>} />
-        <Route path="/products" element={<Create/>} />
-      </Routes>    
-    </div>
-  )
-}
+        {token ? (
+          <Route path="/home" element={<Home />} />
+        ) : (
+          <Route path="/" element={<Signin />} />
+        )}
 
-export default App
+        {/* <Route path="/products" element={<Create/>} /> */}
+        <Route path="/post-category" element={<SelectCategory />} />
+      </Routes>
+    </div>
+  );
+};
+
+export default App;

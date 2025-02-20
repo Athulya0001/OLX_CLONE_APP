@@ -1,7 +1,6 @@
 import React from 'react'
 
 const Cards = ({ product }) => {
-  console.log(product,"cards")
     return (
       <div className="border p-4 rounded-md shadow-md cursor-pointer">
         <div className="flex justify-end">

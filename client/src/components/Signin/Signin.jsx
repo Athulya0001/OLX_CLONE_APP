@@ -17,6 +17,8 @@ const SignIn = () => {
       body: JSON.stringify({ email, password }),
     });
     const data = await response.json();
+    console.log(data.token)
+    localStorage.setItem("token",JSON.stringify(data.token))
     if (data.success) {
       dispatch(login({ email, user:data.user }));
       navigate("/home");

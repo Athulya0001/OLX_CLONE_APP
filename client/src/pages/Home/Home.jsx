@@ -3,7 +3,6 @@ import Navbar from "../../components/Navbar/Navbar";
 import CategoryMenu from "../../components/Category/Category";
 import Cards from "../../components/Cards/Cards";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -13,7 +12,6 @@ const Home = () => {
       .then((res) => setProducts(res.data))
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
-  console.log(products,"home")
   return (
     <div className="flex flex-col justify-center items-center">
       <Navbar/>
