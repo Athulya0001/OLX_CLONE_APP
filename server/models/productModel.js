@@ -1,29 +1,15 @@
 import mongoose from "mongoose"
 
-const productSchema = mongoose.Schema({
-    title : {
-        type: String
-    },
-    price: {
-        type: String
-    },
-    description: {
-        type: String
-    },
-    image: {
-        type: String
-    },
-    category: {
-        type: String,
-        enum: ['vehicles', 'electronics', 'furniture', 'properties'],
-        default: 'vehicles'
-    },
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }
-})
+const ProductSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    price: { type: Number, required: true },
+    description: { type: String, required: true },
+    images: { type: [String], required: true }, 
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    createdAt: { type: Date, default: Date.now }
+  });
 
-const Product = mongoose.model("Product" ,productSchema)
+const Product = mongoose.model("Product" ,ProductSchema)
 
 export default Product;

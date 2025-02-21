@@ -15,7 +15,7 @@ const authSlice = createSlice({
     login: (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = true;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
       localStorage.setItem("isAuthenticated", JSON.stringify(true));
     },
     logout: (state) => {

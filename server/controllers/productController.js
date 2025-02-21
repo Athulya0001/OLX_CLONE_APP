@@ -19,3 +19,30 @@ export const category = async (req, res) => {
     res.status(400).json({ message: "Error getting categories", error });
   }
 };
+
+export const addProduct = async(req, res) => {
+  console.log("Received Body:", req.body);
+    console.log("Received File:", req.file);
+  const { title, category, price, description, owner } = req.body;
+    try {
+    if (!req.files) {
+      return res.status(400).json({ error: "No images uploaded" });
+    }
+    const imagePaths = req.files.map(file => `/uploads/${file.filename}`);
+
+    const postProduct = new Product({
+      title,
+      category,
+      price,
+      description,
+      images: imagePaths,
+      owner,
+    });
+
+    await postProduct.save();
+    res.status(201).json({ message: "Product added successfully!", product: postProduct });
+  
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create product", error });
+  }
+}

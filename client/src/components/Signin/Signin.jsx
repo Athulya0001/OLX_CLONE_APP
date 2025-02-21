@@ -17,10 +17,10 @@ const SignIn = () => {
       body: JSON.stringify({ email, password }),
     });
     const data = await response.json();
-    console.log(data.token)
+    console.log(data)
     localStorage.setItem("token",JSON.stringify(data.token))
     if (data.success) {
-      dispatch(login({ email, user:data.user, token: data.token }));
+      dispatch(login({ email, user:data.user, token: data.token}));
       navigate("/home");
     } else {
       alert("User not found. Please sign up.");

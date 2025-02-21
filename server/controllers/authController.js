@@ -48,7 +48,7 @@ export const loginUser = async (req, res) => {
       sameSite: 'strict'
   });
 
-    res.json({ success: true, token, user: { username: user.username, email: user.email } });
+    res.json({ success: true, token , user: { username: user.username, email: user.email, _id: user._id } });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
