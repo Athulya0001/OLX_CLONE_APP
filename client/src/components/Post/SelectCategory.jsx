@@ -3,14 +3,19 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const SelectCategory = () => {
-  const [category, setCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     axios
-      .get("http://localhost:3000/products")
-      .then((res) => setCategory(res.data))
-      .catch((err) => console.error("Error fetching products:", err));
+      .get("http://localhost:3000/products/category")
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
   }, []);
-  console.log(category, "selectcategory");
+
   return (
     <div>
       <header>
@@ -40,11 +45,20 @@ const SelectCategory = () => {
         <div>
           <div>
             <span>CHOOSE A CATEGORY</span>
-            <div>
-              <select name="" id="">
-                {category.map((item) => {
-                    <option value="">{item.category}</option>
-                })}
+            <div className="flex flex-col justify-center items-center">
+              <label htmlFor="Categories">Category</label>
+              <select>
+                {categories.map((categoryGroup, index) =>
+                  Object.keys(categoryGroup).map((group) => (
+                    <optgroup key={index} label={group}>
+                      {categoryGroup[group].map((item, itemIndex) => (
+                        <option key={itemIndex} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))
+                )}
               </select>
             </div>
           </div>

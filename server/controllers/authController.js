@@ -13,8 +13,9 @@ export const registerUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ success: false, message: "User already exists" });
     }
+    const salt = await bcrypt.genSalt();
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new User({ username, email, password: hashedPassword });
 
     await newUser.save();
@@ -40,6 +41,12 @@ export const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.cookie('token', token, {
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', 
+      maxAge: 3600000, 
+      sameSite: 'strict'
+  });
 
     res.json({ success: true, token, user: { username: user.username, email: user.email } });
   } catch (error) {

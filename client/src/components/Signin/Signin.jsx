@@ -20,7 +20,7 @@ const SignIn = () => {
     console.log(data.token)
     localStorage.setItem("token",JSON.stringify(data.token))
     if (data.success) {
-      dispatch(login({ email, user:data.user }));
+      dispatch(login({ email, user:data.user, token: data.token }));
       navigate("/home");
     } else {
       alert("User not found. Please sign up.");

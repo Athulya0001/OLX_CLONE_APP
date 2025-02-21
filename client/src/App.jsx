@@ -4,6 +4,7 @@ import Signin from "./components/Signin/Signin";
 import Signup from "./components/Signup/Signup";
 import Home from "./pages/Home/Home";
 import SelectCategory from "./components/Post/SelectCategory";
+
 const App = () => {
   const navigate = useNavigate()
   const token = JSON.parse(localStorage.getItem("token"))
@@ -12,6 +13,7 @@ const App = () => {
       navigate("/");
     }
   }, [token, navigate]);
+  
   return (
     <div>
       <Routes>
