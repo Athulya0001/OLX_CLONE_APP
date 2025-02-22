@@ -4,14 +4,15 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 const SelectCategory = () => {
-  const { user } = useSelector((state) => state.auth.user);
+  const {user} = useSelector((state)=>state.auth)
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  console.log(user,"select")
   useEffect(() => {
     axios
       .get("http://localhost:3000/products/category")
@@ -23,7 +24,7 @@ const SelectCategory = () => {
       });
   }, []);
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", selectedCategory);
@@ -37,12 +38,16 @@ const SelectCategory = () => {
     formData.append("owner", user._id);
 
     try {
-      const response = await axios.post("http://localhost:3000/products/newpost", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-    
+      const response = await axios.post(
+        "http://localhost:3000/products/newpost",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       if (response.status !== 201) {
         throw new Error("Failed to create listing");
       }
@@ -50,8 +55,7 @@ const SelectCategory = () => {
       console.error(error);
       alert("Something went wrong!");
     }
-  }
-    
+  };
 
   return (
     <div>
@@ -77,10 +81,12 @@ const SelectCategory = () => {
           </Link>
         </div>
       </header>
-      {loading && <p>Loading...</p>}
+      {/* {loading && <p>Loading...</p>} */}
       <div className="max-w-md mx-auto mt-10 p-6 border border-gray-300 rounded-lg shadow-lg">
-        <h2 className="text-xl font-bold text-gray-800 text-center mb-4">POST YOUR AD</h2>
-        
+        <h2 className="text-xl font-bold text-gray-800 text-center mb-4">
+          POST YOUR AD
+        </h2>
+
         <label className="block font-semibold mb-1">Title</label>
         <input
           className="w-full p-2 border-b border-gray-400 outline-none mb-4 bg-transparent"
@@ -92,19 +98,27 @@ const SelectCategory = () => {
         <label className="block font-semibold mb-1">Category</label>
         <select className="w-full p-2 border border-gray-400 rounded mb-4 bg-white text-gray-700">
           <option>Select a category</option>
-  {categories.map((categoryGroup, index) =>
-    Object.keys(categoryGroup).map((group) => (
-      <optgroup key={index} label={group} className="font-semibold text-gray-800">
-        {categoryGroup[group].map((item, itemIndex) => (
-          <option key={itemIndex} value={item} className="text-gray-600">
-            {item}
-          </option>
-        ))}
-      </optgroup>
-    ))
-  )}
-</select>
-
+          {categories.map((categoryGroup, index) =>
+            Object.keys(categoryGroup).map((group) => (
+              <optgroup
+                key={index}
+                label={group}
+                className="font-semibold text-gray-800"
+              >
+                {categoryGroup[group].map((item, itemIndex) => (
+                  <option
+                    key={itemIndex}
+                    value={item}
+                    className="text-gray-600"
+                    onClick={()=>setSelectedCategory(item)}
+                  >
+                    {item}
+                  </option>
+                ))}
+              </optgroup>
+            ))
+          )}
+        </select>
 
         <label className="block font-semibold mb-1">Price</label>
         <input
@@ -144,7 +158,6 @@ const SelectCategory = () => {
           Upload and Submit
         </button>
       </div>
-      
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import Product from "../models/productModel.js"
+import Product from "../models/productModel.js";
 import { categories } from "../utils/categories.js";
 
 export const allProducts = async (req, res) => {
@@ -20,29 +20,31 @@ export const category = async (req, res) => {
   }
 };
 
-export const addProduct = async(req, res) => {
+export const addProduct = async (req, res) => {
   console.log("Received Body:", req.body);
-    console.log("Received File:", req.file);
+  console.log("Received File:", req.file);
   const { title, category, price, description, owner } = req.body;
-    try {
-    if (!req.files) {
-      return res.status(400).json({ error: "No images uploaded" });
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image uploaded" });
     }
-    const imagePaths = req.files.map(file => `/uploads/${file.filename}`);
+
+    const imagePath = `/uploads/${req.file.filename}`;
+    console.log('Image Path:', imagePath);
 
     const postProduct = new Product({
       title,
       category,
       price,
       description,
-      images: imagePaths,
+      images: [imagePath],
       owner,
     });
 
     await postProduct.save();
     res.status(201).json({ message: "Product added successfully!", product: postProduct });
-  
   } catch (error) {
-    res.status(500).json({ message: "Failed to create product", error });
+    console.error('Error:', error);
+    res.status(500).json({ message: "Failed to create product", error: error.message });
   }
-}
+};
