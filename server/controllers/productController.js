@@ -1,4 +1,5 @@
 import Product from "../models/productModel.js";
+import User from '../models/userModel.js';
 import { categories } from "../utils/categories.js";
 
 export const allProducts = async (req, res) => {
@@ -42,6 +43,15 @@ export const addProduct = async (req, res) => {
     });
 
     await postProduct.save();
+
+    // const user = await User.findById(owner);
+    // if (!user) {
+    //   return res.status(404).json({ message: "User not found" });
+    // }
+
+    // user.productsadd.push(postProduct._id);
+    // await user.save();
+
     res.status(201).json({ message: "Product added successfully!", product: postProduct });
   } catch (error) {
     console.error('Error:', error);

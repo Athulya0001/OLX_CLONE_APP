@@ -13,9 +13,9 @@ export const registerUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ success: false, message: "User already exists" });
     }
-    const salt = await bcrypt.genSalt();
+    // const salt = await bcrypt.genSalt();
 
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, email, password: hashedPassword });
 
     await newUser.save();
@@ -37,7 +37,7 @@ export const loginUser = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ success: false, message: "Invalid credentials" });
+      return res.status(400).json({ success: false, message: "Invalid password" });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });

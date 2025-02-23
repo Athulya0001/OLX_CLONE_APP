@@ -96,7 +96,7 @@ const SelectCategory = () => {
         />
 
         <label className="block font-semibold mb-1">Category</label>
-        <select className="w-full p-2 border border-gray-400 rounded mb-4 bg-white text-gray-700">
+        <select className="w-full p-2 border border-gray-400 rounded mb-4 bg-white text-gray-700" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} >
           <option>Select a category</option>
           {categories.map((categoryGroup, index) =>
             Object.keys(categoryGroup).map((group) => (
@@ -110,7 +110,6 @@ const SelectCategory = () => {
                     key={itemIndex}
                     value={item}
                     className="text-gray-600"
-                    onClick={()=>setSelectedCategory(item)}
                   >
                     {item}
                   </option>
