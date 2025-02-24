@@ -12,12 +12,12 @@ const App = () => {
     if (!token) {
       navigate("/");
     }
-  }, [token, navigate]);
+  }, [token]);
   
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Signin />} />
+        {/* <Route path="/" element={<Signin />} /> */}
         <Route path="/signup" element={<Signup />} />
         {token ? (
           <Route path="/home" element={<Home />} />

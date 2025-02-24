@@ -23,13 +23,14 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 dotenv.config();
 
-mongoConnect();
+mongoConnect().then(()=>{
+  app.listen(port,()=>{
+    console.log("Server listening on port", port)
+})
+})
 
 app.use("/api/auth", authRoutes);
 app.use("/products", productRouter);
 
 const port = process.env.PORT || 4000;
 
-app.listen(port,()=>{
-    console.log("Server listening on port", port)
-})

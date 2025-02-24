@@ -16,12 +16,12 @@ const UserSchema = new mongoose.Schema({
   },
   profileimg: {
     type: String,
-    default: '../public/images/profile-logo.webp'
+    // default: '../public/images/profile-logo.webp'
   },
   phone: {
     type: String,
     required: false,
-    unique: true,
+    unique: false,
   },
   productsadd: [{
     type: mongoose.Schema.Types.ObjectId,

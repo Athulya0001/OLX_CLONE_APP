@@ -17,6 +17,7 @@ const SignUp = () => {
       body: JSON.stringify({ username, email, password }),
     });
     const data = await response.json();
+    console.log(data,"signup")
     if (data.success) {
       dispatch(registerUser({ username, email }));
       alert("Account created successfully! Please sign in.");
