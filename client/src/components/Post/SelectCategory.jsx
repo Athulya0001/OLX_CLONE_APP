@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
@@ -11,6 +11,7 @@ const SelectCategory = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const navigate = useNavigate()
   // const [loading, setLoading] = useState(false);
   console.log(user,"select")
   useEffect(() => {
@@ -31,7 +32,7 @@ const SelectCategory = () => {
     formData.append("price", price);
     formData.append("description", description);
     formData.append("image", image);
-    if (!user?._id) {
+    if (!user._id) {
       alert("You must be logged in to post a product.");
       return;
     }
@@ -51,6 +52,9 @@ const SelectCategory = () => {
       if (response.status !== 201) {
         throw new Error("Failed to create listing");
       }
+      // else{
+      //   navigate("/home")
+      // }
     } catch (error) {
       console.error(error);
       alert("Something went wrong!");

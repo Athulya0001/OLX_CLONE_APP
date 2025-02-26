@@ -20,8 +20,7 @@ const UserSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: false,
-    unique: false,
+    required: true,
   },
   productsadd: [{
     type: mongoose.Schema.Types.ObjectId,

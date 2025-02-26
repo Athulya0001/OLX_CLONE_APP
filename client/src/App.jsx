@@ -4,6 +4,7 @@ import Signin from "./components/Signin/Signin";
 import Signup from "./components/Signup/Signup";
 import Home from "./pages/Home/Home";
 import SelectCategory from "./components/Post/SelectCategory";
+import ProductDetails from "./components/ProductDetails/ProductDetails";
 
 const App = () => {
   const navigate = useNavigate()
@@ -27,6 +28,7 @@ const App = () => {
 
         {/* <Route path="/products" element={<Create/>} /> */}
         <Route path="/post-category" element={<SelectCategory />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>
     </div>
   );

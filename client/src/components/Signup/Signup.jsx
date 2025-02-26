@@ -7,6 +7,7 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
@@ -14,7 +15,7 @@ const SignUp = () => {
     const response = await fetch("http://localhost:3000/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password,phone }),
     });
     const data = await response.json();
     console.log(data,"signup")
@@ -48,6 +49,17 @@ const SignUp = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
+              required
+              className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1"
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Phone</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone"
               required
               className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1"
             />

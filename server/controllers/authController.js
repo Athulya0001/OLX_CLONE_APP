@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, phone } = req.body;
   // console.log(req.body,"req body")
 
   try {
@@ -19,7 +19,7 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     // console.log(hashedPassword,"password")
-    const newUser = User.create({ username, email, password: hashedPassword });
+    const newUser = User.create({ username, email, password: hashedPassword, phone });
 
     await newUser.save();
     return res.status(201).json({ success: true, message: "User registered successfully" });
