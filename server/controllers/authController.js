@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { OAuth2Client } from "google-auth-library";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -15,22 +16,65 @@ export const registerUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log(existingUser,"auth")
       return res.status(400).json({ success: false, message: "User already exists" });
     }
-    // const salt = await bcrypt.genSalt();
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log(hashedPassword,"password")
-    const newUser = User.create({ username, email, password: hashedPassword, phone });
+    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    await newUser.save();
-    return res.status(201).json({ success: true, message: "User registered successfully" });
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+      phone,
+      verificationToken,
+      verified: false,
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const verificationLink = `${process.env.CLIENT_URL}/verify/${verificationToken}`;
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Verify Your Email",
+      html: `<p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`,
+    });
+    return res.status(201).json({ success: true, message: "Verification email sent. Please verify your email." })
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 
 };
+
+export const verifyEmail = async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: decoded.email });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Invalid token or user does not exist" });
+    }
+
+    user.verified = true;
+    user.verificationToken = null;
+    await user.save();
+
+    res.json({ success: true, message: "Email verified successfully! You can now log in." });
+  } catch (error) {
+    res.status(400).json({ success: false, message: "Invalid or expired token" });
+  }
+};
+
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -41,24 +85,30 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid credentials" });
     }
 
+    if (!user.verified) {
+      return res.status(400).json({ success: false, message: "Please verify your email first." });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ success: false, message: "Invalid password" });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.cookie('token', token, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', 
-      maxAge: 3600000, 
-      sameSite: 'strict'
-  });
 
-  return res.json({ success: true, token , user: { username: user.username, email: user.email, _id: user._id } });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000,
+      sameSite: "strict",
+    });
+
+    return res.json({ success: true, token, user: { username: user.username, email: user.email, _id: user._id } });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 
 // export const googleAuth = async (req, res) => {
 //   const { token } = req.body;

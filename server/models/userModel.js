@@ -14,24 +14,19 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  profileimg: {
-    type: String,
-    // default: '../public/images/profile-logo.webp'
+  verified: {
+    type: Boolean,
+    default: false
   },
+  verificationToken: String,
+  profileimg: { type: String },
   phone: {
     type: String,
-    required: true,
+    required: true
   },
-  productsadd: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
-  }],
-  wishlist: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
-  }]
+  productsadd: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 
 const User = mongoose.model("User", UserSchema);
-
 export default User;
