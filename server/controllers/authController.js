@@ -2,8 +2,11 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { OAuth2Client } from "google-auth-library";
 
 dotenv.config();
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 export const registerUser = async (req, res) => {
   const { username, email, password, phone } = req.body;
@@ -26,6 +29,7 @@ export const registerUser = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
+
 };
 
 export const loginUser = async (req, res) => {
@@ -55,3 +59,43 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// export const googleAuth = async (req, res) => {
+//   const { token } = req.body;
+
+//   try {
+//     // Verify the token with Google
+//     const ticket = await client.verifyIdToken({
+//       idToken: token,
+//       audience: process.env.GOOGLE_CLIENT_ID, // The client ID of your Google OAuth app
+//     });
+
+//     const payload = ticket.getPayload();
+//     const user = {
+//       name: payload.name,
+//       email: payload.email,
+//       picture: payload.picture,
+//     };
+
+//     const jwtToken = jwt.sign(user, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+
+//     res.json({ token: jwtToken, user });
+//   } catch (error) {
+//     console.error('Error verifying Google token:', error);
+//     res.status(400).json({ message: 'Invalid token' });
+//   }
+// }
+
+export const wishlist = async (req, res)=>{
+  const {wishlist} = req.body;
+
+  try {
+    const addWish = new User.insertOne({
+      wishlist: wishlist
+    })
+    await addWish.save()
+    return res.status(200).json({message:"Added to wishlist"})
+  } catch (error) {
+    return res.status(500).json({message: "Error adding to wishlist"})
+  }
+}

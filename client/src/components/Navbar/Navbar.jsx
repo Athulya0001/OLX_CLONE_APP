@@ -10,12 +10,17 @@ const Navbar = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
+    const isConfirmed = window.confirm(
+      "Are you sure you want to Logout?"
+    );
+    if (isConfirmed) {
+      dispatch(logout());
+      navigate("/");
+    }
   };
   const handleToast = () => {
-    alert("Please Signin")
-  }
+    alert("Please Signin");
+  };
 
   return (
     <div className="flex justify-center items-center fixed top-7">
@@ -106,9 +111,11 @@ const Navbar = () => {
                   Login
                 </a>
                 <Link to={"/"}>
-                  
                   <div className="border-3 border-r border-b border-amber-500 rounded-xl">
-                    <button onClick={handleToast} className="bg-white text-black px-4 py-2 rounded-xl flex items-center border-3 border-t border-l border-blue-500">
+                    <button
+                      onClick={handleToast}
+                      className="bg-white text-black px-4 py-2 rounded-xl flex items-center border-3 border-t border-l border-blue-500"
+                    >
                       <svg
                         className="h-5 w-5 mr-1"
                         xmlns="http://www.w3.org/2000/svg"

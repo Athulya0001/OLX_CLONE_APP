@@ -32,11 +32,11 @@ const SelectCategory = () => {
     formData.append("price", price);
     formData.append("description", description);
     formData.append("image", image);
-    if (!user._id) {
+    if (!user.user._id) {
       alert("You must be logged in to post a product.");
       return;
     }
-    formData.append("owner", user._id);
+    formData.append("owner", user.user._id);
 
     try {
       const response = await axios.post(
@@ -52,9 +52,8 @@ const SelectCategory = () => {
       if (response.status !== 201) {
         throw new Error("Failed to create listing");
       }
-      // else{
-      //   navigate("/home")
-      // }
+  
+      navigate("/home");
     } catch (error) {
       console.error(error);
       alert("Something went wrong!");
@@ -165,4 +164,4 @@ const SelectCategory = () => {
   );
 };
 
-export default SelectCategory;
+export default SelectCategory

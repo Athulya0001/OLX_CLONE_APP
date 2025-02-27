@@ -44,13 +44,13 @@ export const addProduct = async (req, res) => {
 
     await postProduct.save();
 
-    // const user = await User.findById(owner);
-    // if (!user) {
-    //   return res.status(404).json({ message: "User not found" });
-    // }
+    const user = await User.findById(owner);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    // user.productsadd.push(postProduct._id);
-    // await user.save();
+    user.productsadd.push(postProduct._id);
+    await user.save();
 
     res.status(201).json({ message: "Product added successfully!", product: postProduct });
   } catch (error) {
@@ -69,3 +69,4 @@ export const productDetails = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 }
+

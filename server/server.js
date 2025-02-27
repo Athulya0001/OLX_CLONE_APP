@@ -6,6 +6,8 @@ import { fileURLToPath } from "url";
 import mongoConnect from './mongoConnect.js';
 import authRoutes from "./routes/authRoute.js"
 import productRouter from './routes/productsRoute.js';
+import { OAuth2Client } from 'google-auth-library';
+import jwt from 'jsonwebtoken';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,6 +24,7 @@ app.use(cors({
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 dotenv.config();
+
 
 mongoConnect().then(()=>{
   app.listen(port,()=>{
