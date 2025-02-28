@@ -20,9 +20,9 @@ const App = () => {
   return (
     <div>
       <Routes>
+        <Route path="/" element={token ? <Home /> : <Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify/:token" element={<VerifyEmail />} /> {/* New Route */}
-        <Route path="/" element={token ? <Home /> : <Signin />} />
         {token && <Route path="/home" element={<Home />} />}
         <Route path="/post-category" element={<SelectCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />

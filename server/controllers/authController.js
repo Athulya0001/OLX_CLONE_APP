@@ -100,52 +100,45 @@ export const loginUser = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 3600000,
-      sameSite: "strict",
+      sameSite: "Strict",
     });
 
-    return res.json({ success: true, token, user: { username: user.username, email: user.email, _id: user._id } });
+    return res.json({ success: true, user: { username: user.username, email: user.email, _id: user._id } });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-
-// export const googleAuth = async (req, res) => {
-//   const { token } = req.body;
-
-//   try {
-//     // Verify the token with Google
-//     const ticket = await client.verifyIdToken({
-//       idToken: token,
-//       audience: process.env.GOOGLE_CLIENT_ID, // The client ID of your Google OAuth app
-//     });
-
-//     const payload = ticket.getPayload();
-//     const user = {
-//       name: payload.name,
-//       email: payload.email,
-//       picture: payload.picture,
-//     };
-
-//     const jwtToken = jwt.sign(user, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-
-//     res.json({ token: jwtToken, user });
-//   } catch (error) {
-//     console.error('Error verifying Google token:', error);
-//     res.status(400).json({ message: 'Invalid token' });
-//   }
-// }
-
-export const wishlist = async (req, res)=>{
-  const {wishlist} = req.body;
-
+export const wishlist = async (req, res) => {
   try {
-    const addWish = new User.insertOne({
-      wishlist: wishlist
-    })
-    await addWish.save()
-    return res.status(200).json({message:"Added to wishlist"})
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { productId } = req.body;
+    const userId = req.user.id;
+
+    if (!productId) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isAlreadyInWishlist = user.wishlist.includes(productId);
+    if (isAlreadyInWishlist) {
+      user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
+    } else {
+      user.wishlist.push(productId);
+    }
+
+    await user.save();
+    res.status(200).json({ wishlist: user.wishlist, message: "Wishlist updated" });
+
   } catch (error) {
-    return res.status(500).json({message: "Error adding to wishlist"})
+    console.error("Error updating wishlist:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
