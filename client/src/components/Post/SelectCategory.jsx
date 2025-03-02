@@ -131,12 +131,13 @@ const SelectCategory = () => {
         />
 
         <label className="block font-semibold mb-1">Description</label>
-        <input
-          className="w-full p-2 border-b border-gray-400 outline-none mb-4 bg-transparent"
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <textarea
+  className="w-full p-2 border-b border-gray-400 outline-none mb-4 bg-transparent resize-none"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  rows={6}
+/>
+
 
         <div className="flex flex-col items-center">
           {image && (

@@ -103,8 +103,9 @@ export const loginUser = async (req, res) => {
       sameSite: "Strict",
     });
 
-    return res.json({ success: true, user: { username: user.username, email: user.email, _id: user._id } });
+    return res.json({ success: true,verified: user.verified, token, user: { username: user.username, email: user.email, _id: user._id } });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };

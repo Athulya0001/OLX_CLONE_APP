@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Signin from "./components/Signin/Signin";
 import Signup from "./components/Signup/Signup";
-import VerifyEmail from "./components/Verify/VerifyEmail"; // Import the VerifyEmail page
+import VerifyEmail from "./components/Verify/VerifyEmail";
 import Home from "./pages/Home/Home";
 import SelectCategory from "./components/Post/SelectCategory";
 import ProductDetails from "./components/ProductDetails/ProductDetails";
 
 const App = () => {
   const navigate = useNavigate();
-  const [token, setToken] = useState(() => JSON.parse(localStorage.getItem("token")));
+  const token = JSON.parse(localStorage.getItem("token"));
 
   useEffect(() => {
     if (!token) {
       navigate("/");
     }
-  }, [token, navigate]);
+  }, [token,]);
 
   return (
     <div>

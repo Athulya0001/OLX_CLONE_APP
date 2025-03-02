@@ -20,7 +20,7 @@ const SignIn = () => {
     console.log(data);
 
     if (data.success) {
-      if (!data.user.verified) {
+      if (data.user.verified===false) {
         alert("Your email is not verified. Please check your email.");
         return;
       }
