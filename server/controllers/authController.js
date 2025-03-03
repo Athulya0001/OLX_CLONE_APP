@@ -6,10 +6,8 @@ import nodemailer from "nodemailer";
 
 dotenv.config();
 
-
 export const registerUser = async (req, res) => {
   const { username, email, password, phone } = req.body;
-  // console.log(req.body,"req body")
 
   try {
     const existingUser = await User.findOne({ email });
@@ -17,18 +15,20 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ success: false, message: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
-    const newUser = await User.create({
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.create({
       username,
       email,
       password: hashedPassword,
       phone,
-      verificationToken,
+      otp,
+      otpExpires,
       verified: false,
     });
-    console.log(newUser,"new user")
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -38,29 +38,26 @@ export const registerUser = async (req, res) => {
       },
     });
 
-    const verificationLink = `${process.env.CLIENT_URL}/verify/${verificationToken}`;
-
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Verify Your Email",
-      html: `<p>Click <a href="${verificationLink}">here</a> to verify your email.</p>`,
+      subject: "Your OTP Code",
+      html: `<p>Your OTP code is <b>${otp}</b>. It will expire in 10 minutes.</p>`,
     });
-    return res.status(201).json({ success: true, message: "Verification email sent. Please verify your email." })
+    return res.status(200).json({ success: true, message: "OTP sent to your email" });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
-
 };
 
 export const request = (req, res) => {
-  const {ownerEmail, message} = req.body
+  const {ownerEmail, message, userEmail} = req.body
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,  
-    to: ownerEmail, 
-    subject: 'Request for Details', 
-    text: message || 'No message provided.'  
+    from: userEmail,
+    to: ownerEmail,
+    subject: 'Request for Details',
+    text: message || 'No message provided.'
   };
 
   const transporter = nodemailer.createTransport({
@@ -79,30 +76,40 @@ export const request = (req, res) => {
   });
 }
 
-export const verifyEmail = async (req, res) => {
-  const { token } = req.params;
+export const verifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({ email: decoded.email });
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ success: false, message: "Invalid token or user does not exist" });
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
+
+    if (user.verified) {
+      return res.status(400).json({ success: false, message: "User already verified" });
+    }
+
+    if (user.otp !== otp || user.otpExpires < new Date()) {
+      return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
     }
 
     user.verified = true;
-    user.verificationToken = null;
+    user.otp = null;
+    user.otpExpires = null;
     await user.save();
 
-    res.json({ success: true, message: "Email verified successfully! You can now log in." });
+    return res.status(200).json({ success: true, message: "OTP verified. Registration complete!" });
   } catch (error) {
-    res.status(400).json({ success: false, message: "Invalid or expired token" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
-
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: "Email and password are required." });
+  }
 
   try {
     const user = await User.findOne({ email });

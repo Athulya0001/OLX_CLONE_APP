@@ -24,10 +24,13 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
+  const user = JSON.parse(localStorage.getItem("user"))
+
+  const userEmail = user.email;
   const fetchRequest = async (ownerEmail) => {
     try {
       const response = await axios.post('http://localhost:3000/api/auth/request', {
-        ownerEmail,
+        ownerEmail, userEmail,
         message: 'I would like to request more details about the product.'
       });
       const data = await response.data;

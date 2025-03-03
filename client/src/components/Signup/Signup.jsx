@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../ReduxStore/Reducers/authSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,7 @@ const SignUp = () => {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -20,6 +21,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setMessage("");
 
     try {
@@ -33,9 +35,10 @@ const SignUp = () => {
       console.log(data, "signup");
 
       if (data.success) {
-        setMessage("Verification email sent. Check your inbox.");
-        localStorage.setItem("token", JSON.stringify(data.token || ""));
-        dispatch(registerUser({ username: formData.username, email: formData.email,phone: formData.phone, isVerified: false }));
+        // setMessage("Verification email sent. Check your inbox.");
+        // localStorage.setItem("token", JSON.stringify(data.token || ""));
+        // dispatch(registerUser({ username: formData.username, email: formData.email,phone: formData.phone, isVerified: false }));
+        navigate("/verify-otp", { state: { email: formData.email } });
       } else {
         setMessage(data.message);
       }
