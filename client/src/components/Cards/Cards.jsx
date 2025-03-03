@@ -2,31 +2,35 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Cards = ({ product }) => {
+const Cards = ({ product, user }) => {
   const [wishlist, setWishlist] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchWishlist = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/user/wishlist", {
-          withCredentials: true,
-        });
-        setWishlist(response.data.wishlist);
-      } catch (error) {
-        console.error("Error fetching wishlist:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchWishlist = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:3000/api/auth/wishlist', { withCredentials: true });
+  //       console.log(response, "wishlist");
+  //       setWishlist(response.data.wishlist);
+  //     } catch (error) {
+  //       console.error("Error fetching wishlist:", error);
+  //     }
+  //   };
 
-    fetchWishlist();
-  }, []);
+  //   fetchWishlist();
+  // }, []);
 
   const handleWishlist = async (productId) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/user/wishlist",
-        { productId },
-        { withCredentials: true }
+        "http://localhost:3000/api/auth/wishlist",
+        { productId}, user,
+        {
+          headers: {
+            'Content-Type': 'application/json'  // Ensure this header is set to handle JSON
+          },
+          withCredentials: true,  // Send cookies for authentication
+        }
       );
       setWishlist(response.data.wishlist);
     } catch (error) {

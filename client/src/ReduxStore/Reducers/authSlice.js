@@ -22,8 +22,8 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.token = action.payload.token;
         state.isVerified = true;
-        localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("token", JSON.stringify(action.payload.token));
         localStorage.setItem("isVerified", JSON.stringify(true));
       } else {

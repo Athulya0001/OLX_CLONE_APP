@@ -2,11 +2,9 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { OAuth2Client } from "google-auth-library";
 import nodemailer from "nodemailer";
 
 dotenv.config();
-// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 
 export const registerUser = async (req, res) => {
@@ -30,6 +28,7 @@ export const registerUser = async (req, res) => {
       verificationToken,
       verified: false,
     });
+    console.log(newUser,"new user")
 
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -53,6 +52,32 @@ export const registerUser = async (req, res) => {
   }
 
 };
+
+export const request = (req, res) => {
+  const {ownerEmail, message} = req.body
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,  
+    to: ownerEmail, 
+    subject: 'Request for Details', 
+    text: message || 'No message provided.'  
+  };
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).json({ message: 'Failed to send email', error });
+    }
+    res.status(200).json({ success:true,  message: 'Request sent successfully!' });
+  });
+}
 
 export const verifyEmail = async (req, res) => {
   const { token } = req.params;
@@ -103,7 +128,7 @@ export const loginUser = async (req, res) => {
       sameSite: "Strict",
     });
 
-    return res.json({ success: true,verified: user.verified, token, user: { username: user.username, email: user.email, _id: user._id } });
+    return res.json({ success: true, verified: user.verified, token, user: { username: user.username, email: user.email, _id: user._id } });
   } catch (error) {
     console.log(error)
     return res.status(500).json({ success: false, message: "Server error" });
@@ -111,10 +136,12 @@ export const loginUser = async (req, res) => {
 };
 
 export const wishlist = async (req, res) => {
+  console.log(req.user,"user")
   try {
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
+    console.log(req.body,"wish")
 
     const { productId } = req.body;
     const userId = req.user.id;
@@ -128,11 +155,14 @@ export const wishlist = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isAlreadyInWishlist = user.wishlist.includes(productId);
+    const productIdStr = productId.toString();
+
+    const isAlreadyInWishlist = user.wishlist.some(id => id.toString() === productIdStr);
+
     if (isAlreadyInWishlist) {
-      user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
+      user.wishlist = user.wishlist.filter(id => id.toString() !== productIdStr);
     } else {
-      user.wishlist.push(productId);
+      user.wishlist.push(productIdStr);
     }
 
     await user.save();

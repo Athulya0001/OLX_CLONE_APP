@@ -10,6 +10,7 @@ import ProductDetails from "./components/ProductDetails/ProductDetails";
 const App = () => {
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token"));
+  const user = JSON.parse(localStorage.getItem("user"))
 
   useEffect(() => {
     if (!token) {
@@ -20,10 +21,10 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={token ? <Home /> : <Signin />} />
+        <Route path="/" element={token ? <Home user={user}/> : <Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify/:token" element={<VerifyEmail />} /> {/* New Route */}
-        {token && <Route path="/home" element={<Home />} />}
+        {token && <Route path="/home" element={<Home user={user}/>} />}
         <Route path="/post-category" element={<SelectCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
       </Routes>

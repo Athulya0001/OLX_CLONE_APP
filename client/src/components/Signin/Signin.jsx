@@ -25,6 +25,7 @@ const SignIn = () => {
         return;
       }
       localStorage.setItem("token", JSON.stringify(data.token));
+      localStorage.setItem("user",JSON.stringify(data.user));
       dispatch(login({ email, user: data.user, token: data.token }));
       navigate("/home");
     } else {

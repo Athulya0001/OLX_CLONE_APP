@@ -8,6 +8,9 @@ import authRoutes from "./routes/authRoute.js"
 import productRouter from './routes/productsRoute.js';
 import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
+import { wishlist } from './controllers/authController.js';
+import { authCheck } from './middleware/authCheck.js';
+import cookieParser from 'cookie-parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,14 +19,17 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  }))
+const corsOptions = {
+  origin: 'http://localhost:5173', // Your frontend URL
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+};
+
+app.use(cors(corsOptions));
 
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 dotenv.config();
+app.use(cookieParser());
 
 
 mongoConnect().then(()=>{
@@ -31,9 +37,12 @@ mongoConnect().then(()=>{
     console.log("Server listening on port", port)
 })
 })
+app.get('/api/auth/wishlist', wishlist); 
+
 
 app.use("/api/auth", authRoutes);
 app.use("/products", productRouter);
+app.post('/api/auth/wishlist',authCheck, wishlist);  // Define POST route for updating the wishlist
 
 const port = process.env.PORT || 4000;
 

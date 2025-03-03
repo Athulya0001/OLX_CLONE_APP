@@ -4,7 +4,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 const SelectCategory = () => {
-  const {user} = useSelector((state)=>state.auth)
+  const user = useSelector((state)=>state.auth.user)
+  console.log(user)
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -13,7 +14,7 @@ const SelectCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate()
   // const [loading, setLoading] = useState(false);
-  console.log(user,"select")
+  // console.log(user,"select")
   useEffect(() => {
     axios
       .get("http://localhost:3000/products/category")
@@ -32,11 +33,11 @@ const SelectCategory = () => {
     formData.append("price", price);
     formData.append("description", description);
     formData.append("image", image);
-    if (!user.user._id) {
+    if (!user._id) {
       alert("You must be logged in to post a product.");
       return;
     }
-    formData.append("owner", user.user._id);
+    formData.append("owner", user._id);
 
     try {
       const response = await axios.post(
