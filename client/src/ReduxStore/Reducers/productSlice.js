@@ -9,7 +9,6 @@ const productSlice = createSlice({
     addProduct: (state, action) => {
       state.items.push(action.payload);
     },
-    
   },
 });
 

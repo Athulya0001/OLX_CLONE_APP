@@ -5,6 +5,7 @@ export const categories = [
         "mobiles & accessories",
         "computers & laptops",
         "home appliences",
+        "home decors"
       ],
     },
     { furniture: ["sofas", "beds", "chairs"] },

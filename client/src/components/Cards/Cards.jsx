@@ -1,46 +1,53 @@
+import { useState, useEffect } from "react";
 import axios from "axios";
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Cards = ({ product }) => {
-  const [wishlist, setWishlist] = useState(null);
+const Cards = ({ product, user }) => {
+  const [wishlist, setWishlist] = useState([]);
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   const fetchWishlist = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:3000/api/auth/wishlist', { withCredentials: true });
+  //       console.log(response, "wishlist");
+  //       setWishlist(response.data.wishlist);
+  //     } catch (error) {
+  //       console.error("Error fetching wishlist:", error);
+  //     }
+  //   };
 
-  console.log(product._id,"id")
-  const handleWishlist = async(productId) => {
-    setWishlist(productId);
-    const data = await axios.post("http://localhost:3000/products/wishlist",
-      wishlist
-    );
+  //   fetchWishlist();
+  // }, []);
 
+  const handleWishlist = async (productId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/wishlist",
+        { productId}, user,
+        {
+          headers: {
+            'Content-Type': 'application/json'  // Ensure this header is set to handle JSON
+          },
+          withCredentials: true,  // Send cookies for authentication
+        }
+      );
+      setWishlist(response.data.wishlist);
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
+    }
   };
-  console.log(wishlist,"wishlist")
+
   return (
-    <div
-      className="flex flex-col bg-slate-50 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[280px] p-4 cursor-pointer"
-      
-    >
+    <div className="flex flex-col bg-slate-50 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[280px] p-4 cursor-pointer">
       <div className="flex justify-end">
         <button onClick={() => handleWishlist(product._id)}>
-          {wishlist===null ? (
-            <svg
-              className="h-6 w-6"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              stroke="none"
-            >
+          {wishlist.includes(product._id) ? (
+            <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           ) : (
-            <svg
-              className="h-6 w-6 text-red-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              stroke="none"
-            >
+            <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
           )}
@@ -48,26 +55,16 @@ const Cards = ({ product }) => {
       </div>
 
       <div className="flex justify-center w-full h-[140px] overflow-hidden" onClick={() => navigate(`/product/${product._id}`)}>
-        <img
-          src={`http://localhost:3000${product.images[0]}`}
-          alt="Product"
-          className="w-auto h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-        />
+        <img src={`http://localhost:3000${product.images[0]}`} alt="Product" className="w-auto h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105" />
       </div>
 
       <div className="p-3 flex flex-col gap-2 text-center">
-        <p className="text-xl font-bold text-[#000030]">
-          &#x20B9; {product.price}
-        </p>
+        <p className="text-xl font-bold text-[#000030]">&#x20B9; {product.price}</p>
         <span className="text-sm text-gray-500">{product.category}</span>
-        <p className="text-base text-gray-800 font-semibold truncate">
-          {product.title}
-        </p>
+        <p className="text-base text-gray-800 font-semibold truncate">{product.title}</p>
       </div>
 
-      <div className="flex justify-end text-xs text-gray-400 px-3 pb-2">
-        {product.date}
-      </div>
+      <div className="flex justify-end text-xs text-gray-400 px-3 pb-2">{product.date}</div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const token = JSON.parse(localStorage.getItem("token"))
 
   const handleLogout = () => {
     const isConfirmed = window.confirm(
@@ -75,7 +76,7 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            {isAuthenticated ? (
+            {token ? (
               <div className="flex justify-between items-center gap-x-3">
                 <button
                   onClick={handleLogout}
