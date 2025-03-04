@@ -90,14 +90,11 @@ const ProductDetails = () => {
             </p>
 
             {/* Owner Details */}
-            {/* {owner && (
+             {owner && (
                             <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-                                <h2 className="text-lg font-semibold">Owner Details</h2>
-                                <p><strong>Name:</strong> {owner.username}</p>
-                                <p><strong>Email:</strong> {owner.email}</p>
-                                <p><strong>Phone:</strong> {owner.phone || "Not provided"}</p>
+                                <h2 className="text-lg font-semibold">{owner.username}</h2>
                             </div>
-                        )} */}
+                        )}
             <div>
               <button className="px-2 bg-[#002f34] text-white font-bold py-2 rounded-md hover:bg-white hover:text-[#002f34] hover:border-2 hover:border-[#002f34] transition-all" onClick={() => fetchRequest(owner.email)} >
                 Request Details

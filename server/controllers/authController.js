@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ export const registerUser = async (req, res) => {
     });
     return res.status(200).json({ success: true, message: "OTP sent to your email" });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -91,6 +93,8 @@ export const verifyOtp = async (req, res) => {
     }
 
     if (user.otp !== otp || user.otpExpires < new Date()) {
+      console.log(user.otp,"user otp")
+      console.log(otp,"otp")
       return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
     }
 
@@ -101,6 +105,7 @@ export const verifyOtp = async (req, res) => {
 
     return res.status(200).json({ success: true, message: "OTP verified. Registration complete!" });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -143,7 +148,7 @@ export const loginUser = async (req, res) => {
 };
 
 export const wishlist = async (req, res) => {
-  console.log(req.user,"user")
+  console.log(req.user,"user wishlist")
   try {
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });

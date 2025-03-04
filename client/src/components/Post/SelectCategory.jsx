@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 const SelectCategory = () => {
   const user = useSelector((state)=>state.auth.user)
-  console.log(user)
+  // console.log(user)
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
