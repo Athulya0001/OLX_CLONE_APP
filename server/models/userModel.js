@@ -14,24 +14,34 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  profileimg: {
-    type: String,
-    // default: '../public/images/profile-logo.webp'
-  },
   phone: {
     type: String,
-    required: true,
+    required: true
   },
-  productsadd: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
+  profileimg: { 
+    type: String 
+  },
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  otp: { 
+    type: String, 
+    default: null 
+  },
+  otpExpires: { 
+    type: Date, 
+    default: null 
+  },
+  productsadd: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Product" 
   }],
-  wishlist: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Product'
+  wishlist: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Product" 
   }]
 });
 
 const User = mongoose.model("User", UserSchema);
-
 export default User;
