@@ -70,3 +70,34 @@ export const productDetails = async (req, res) => {
   }
 }
 
+// add to wishlist
+export const wishlist = async (req, res) => {
+  const user=req.user;
+  const {id} =req.params
+   try {
+    const { productId, user } = req.body;
+    console.log(user,"user is")
+
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const userId = user._id;
+    const userFind = await User.findById(userId);
+
+
+
+    const isWishlisted = userFind.wishlist.includes(productId);
+    if (isWishlisted) {
+      userFind.wishlist = userFind.wishlist.filter(id => id.toString() !== productId);
+    } else {
+      userFind.wishlist.push(productId);
+    }
+
+    await userFind.save();
+    return res.json({ wishlist: userFind.wishlist });
+  } catch (error) {
+    console.error("Error updating wishlist:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}

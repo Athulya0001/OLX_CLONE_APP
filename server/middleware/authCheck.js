@@ -1,20 +1,17 @@
 import jwt from "jsonwebtoken";
 
-export const authCheck = async (req, res, next) => {
+export const verifyToken = (req, res, next) => {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   try {
-    const token = req.cookies.token;
     if (!token) {
-      req.user = null;
-      return next();
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: No token provided" });
     }
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded._id };
-    console.log("Authenticated User:", req.user);
+    req.user = decoded; // Attach user info to `req.user`
     next();
   } catch (error) {
-    console.error("Auth Middleware Error:", error);
-    req.user = null;
-    next();
+    res.status(403).json({ message: "Invalid or expired token" });
   }
 };

@@ -19,5 +19,6 @@ productRouter.post("/newpost", upload.single("image"), addProduct);
 productRouter.get('/', allProducts)
 productRouter.get('/category', category)
 productRouter.get('/:id', productDetails)
+productRouter.post('/wishlist/:id')
 
 export default productRouter

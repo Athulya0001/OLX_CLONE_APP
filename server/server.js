@@ -1,20 +1,12 @@
-import express from 'express';
-import path from 'path';
-import dotenv from 'dotenv';
+import express from "express";
+import path from "path";
+import dotenv from "dotenv";
 import cors from "cors";
 import { fileURLToPath } from "url";
-import mongoConnect from './mongoConnect.js';
-import authRoutes from "./routes/authRoute.js"
-import productRouter from './routes/productsRoute.js';
-import { OAuth2Client } from 'google-auth-library';
-import jwt from 'jsonwebtoken';
-import { wishlist } from './controllers/authController.js';
-<<<<<<< HEAD
-// import { authCheck } from './middleware/authCheck.js';
-=======
-import { authCheck } from './middleware/authCheck.js';
->>>>>>> 0dde386b71112a7d5920cb8aefffd07c88b900a2
-import cookieParser from 'cookie-parser';
+import mongoConnect from "./mongoConnect.js";
+import authRoutes from "./routes/authRoute.js";
+import productRouter from "./routes/productsRoute.js";
+import cookieParser from "cookie-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,10 +14,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
-  origin: 'http://localhost:5173', // Your frontend URL
-  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+  origin: ["http://localhost:5173"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
@@ -35,21 +29,14 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 dotenv.config();
 app.use(cookieParser());
 
-
-mongoConnect().then(()=>{
-  app.listen(port,()=>{
-    console.log("Server listening on port", port)
-})
-})
-app.get('/api/auth/wishlist', wishlist); 
-
+mongoConnect().then(() => {
+  app.listen(port, () => {
+    console.log("Server listening on port", port);
+  });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/products", productRouter);
-<<<<<<< HEAD
 // app.post('/api/auth/wishlist',authCheck, wishlist);
-=======
-app.post('/api/auth/wishlist',authCheck, wishlist);  // Define POST route for updating the wishlist
->>>>>>> 0dde386b71112a7d5920cb8aefffd07c88b900a2
 
 const port = process.env.PORT || 4000;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../ReduxStore/Reducers/authSlice";
+import axios from "axios";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -11,21 +12,19 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:3000/api/auth/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    const response = await axios.post("http://localhost:3000/api/auth/signin", {
+      email,
+      password,
     });
-    const data = await response.json();
-    console.log(data);
+    const data = await response.data;
 
     if (data.success) {
-      if (data.user.verified===false) {
+      if (data.user.verified === false) {
         alert("Your email is not verified. Please check your email.");
         return;
       }
       localStorage.setItem("token", JSON.stringify(data.token));
-      localStorage.setItem("user",JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(data.user));
       dispatch(login({ email, user: data.user, token: data.token }));
       navigate("/home");
     } else {
@@ -69,7 +68,9 @@ const SignIn = () => {
         <div className="text-center mt-4">
           Don’t have an account?{" "}
           <Link to={"/signup"}>
-            <span className="text-amber-700 font-semibold hover:text-amber-500">Signup</span>
+            <span className="text-amber-700 font-semibold hover:text-amber-500">
+              Signup
+            </span>
           </Link>
         </div>
       </div>

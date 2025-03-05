@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import Signin from "./components/Signin/Signin";
-import Signup from "./components/Signup/Signup";
+import Signin from "./pages/Signin/Signin";
+import Signup from "./pages/Signup/Signup";
 import Home from "./pages/Home/Home";
 import SelectCategory from "./components/Post/SelectCategory";
-import ProductDetails from "./components/ProductDetails/ProductDetails";
+import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import OtpVerification from "./components/Verify/OtpVerification";
 
 const App = () => {

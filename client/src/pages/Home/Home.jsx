@@ -4,10 +4,13 @@ import Navbar from "../../components/Navbar/Navbar";
 import CategoryMenu from "../../components/Category/Category";
 import Cards from "../../components/Cards/Cards";
 import Footer from "../../components/Footer/Footer";
+import Banner from "../../components/Banner/Banner";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user)
 
   useEffect(() => {
     axios
@@ -36,6 +39,8 @@ const Home = () => {
       <Navbar />
       <CategoryMenu />
 
+      <Banner/>
+
       <div className="flex justify-between items-center w-full px-6 py-3">
   <h3 className="text-xl">Fresh Recommendations</h3>
   <select
@@ -44,8 +49,8 @@ const Home = () => {
     className="border px-2 rounded bg-white"
   >
     <option value="">Sort By</option>
-    <option value="newest">Newest First</option>
-    <option value="oldest">Oldest First</option>
+    <option value="newest">Newest</option>
+    <option value="oldest">Oldest</option>
     <option value="lowToHigh">Price: Low to High</option>
     <option value="highToLow">Price: High to Low</option>
   </select>
@@ -55,7 +60,7 @@ const Home = () => {
           <p className="text-gray-500">No products available</p>
         ) : (
           sortedProducts.map((product) => (
-            <Cards key={product._id} product={product} />
+            <Cards key={product._id} product={product} user={user} />
           ))
         )}
       </div>

@@ -3,12 +3,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import Banner1 from "..//../assets/banner1.jpeg";
+import Banner2 from "..//../assets/banner2.jpeg";
 
-const images = [
-  "https://via.placeholder.com/1200x400?text=Ad+1",
-  "https://via.placeholder.com/1200x400?text=Ad+2",
-  "https://via.placeholder.com/1200x400?text=Ad+3",
-];
+const images = [Banner1, Banner2];
 
 const Banner = () => {
   return (
@@ -24,7 +22,11 @@ const Banner = () => {
       >
         {images.map((img, index) => (
           <SwiperSlide key={index}>
-            <img src={img} alt={`Slide ${index + 1}`} className="w-full h-64 object-cover rounded-lg" />
+            <img
+              src={img}
+              alt={`Slide ${index + 1}`}
+              className="w-full h-64 object-cover rounded-lg"
+            />
           </SwiperSlide>
         ))}
       </Swiper>
