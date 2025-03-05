@@ -73,11 +73,8 @@ export const productDetails = async (req, res) => {
 // add to wishlist
 export const wishlist = async (req, res) => {
   const user=req.user;
-  const {id} =req.params
+  const {ProductId} =req.body;
    try {
-    const { productId, user } = req.body;
-    console.log(user,"user is")
-
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -85,19 +82,40 @@ export const wishlist = async (req, res) => {
     const userId = user._id;
     const userFind = await User.findById(userId);
 
-
-
     const isWishlisted = userFind.wishlist.includes(productId);
-    if (isWishlisted) {
-      userFind.wishlist = userFind.wishlist.filter(id => id.toString() !== productId);
-    } else {
-      userFind.wishlist.push(productId);
-    }
+    console.log(isWishlisted,"wish")
+    // if (isWishlisted) {
+    //   userFind.wishlist = userFind.wishlist.filter(id => id.toString() !== productId);
+    // } else {
+    //   userFind.wishlist.push(productId);
+    // }
 
-    await userFind.save();
-    return res.json({ wishlist: userFind.wishlist });
+    // await userFind.save();
+    return res.json({ user: userFind });
   } catch (error) {
     console.error("Error updating wishlist:", error);
     res.status(500).json({ message: "Server error" });
+  }
+}
+
+export const searchProducts = async (req, res) => {
+  try {
+    const { query } = req.query.query;
+
+    if (!query || query.length < 3) {
+      return res.status(400).json({ message: "Search query must be at least 3 characters" });
+    }
+
+    const products = await Product.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },  // Case-insensitive search on title
+        { category: { $regex: query, $options: "i" } } // Case-insensitive search on category
+      ]
+    }).select("title category"); // Select only needed fields
+
+    res.json(products);
+  } catch (error) {
+    console.error("Search Error:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 }

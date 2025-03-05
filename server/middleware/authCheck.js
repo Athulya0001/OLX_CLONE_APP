@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 
-export const verifyToken = (req, res, next) => {
-  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+export const authCheck = (req, res, next) => {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1] || req.body.token
+  console.log(token,"token back")
   try {
     if (!token) {
       return res
@@ -9,7 +10,7 @@ export const verifyToken = (req, res, next) => {
         .json({ message: "Unauthorized: No token provided" });
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach user info to `req.user`
+    req.user = decoded;
     next();
   } catch (error) {
     res.status(403).json({ message: "Invalid or expired token" });

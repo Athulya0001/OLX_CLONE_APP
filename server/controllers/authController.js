@@ -40,7 +40,6 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  console.log("fn call");
   const { email, password } = req.body;
   console.log(email, password);
 
@@ -74,11 +73,11 @@ export const loginUser = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600000,
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   maxAge: 3600000,
+    // });
 
     res.cookie("token", token, { expires: new Date(Date.now() + 3600000) });
     return res.json({
