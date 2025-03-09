@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser, verifyOtp, request } from "../controllers/authController.js";
+import { registerUser, loginUser, verifyOtp, request, getWishlist } from "../controllers/authController.js";
 // import {authCheck} from '../middleware/authCheck.js';
 
 const authRouter = express.Router();
@@ -8,6 +8,6 @@ authRouter.post("/signup", registerUser);
 authRouter.post("/verify-otp", verifyOtp)
 authRouter.post("/signin", loginUser);
 authRouter.post("/request", request)
-// authRouter.get("wishlist", wishlist)
+authRouter.get("/wishlist", getWishlist)
 
 export default authRouter;

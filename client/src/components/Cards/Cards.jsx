@@ -6,15 +6,17 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 const Cards = ({ product, user }) => {
   const [wishlist, setWishlist] = useState([]);
   const navigate = useNavigate();
+  const userId = user._id;
 
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
         const response = await axios.get(
           "http://localhost:3000/api/auth/wishlist",
+          {body: {wishlist,userId}}
         );
         console.log(response,"res")
-        // setWishlist(response.data.wishlist);
+        setWishlist(response.data.wishlist);
       } catch (error) {
         console.error("Error fetching wishlist:", error);
       }
@@ -26,17 +28,18 @@ const Cards = ({ product, user }) => {
   const handleWishlist = async (productId) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/auth/wishlist/${productId}`,
-       
+        `http://localhost:3000/products/wishlist`,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          body: JSON.stringify(productId, userId)
         }
       );
-      console.log(response,"res")
-      // setWishlist(response.data.wishlist);
+      const data = await response.json()
+      console.log(data,"res")
+      setWishlist(response.data.wishlist);
     } catch (error) {
       console.error("Error updating wishlist:", error);
     }

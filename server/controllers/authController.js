@@ -166,3 +166,21 @@ export const verifyOtp = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+// get wishlist
+export const getWishlist = async(req, res) => {
+  const {wishlist, userId} = req.body;
+
+  try {
+    const existingUser = await User.findById(userId);
+    if(!existingUser){
+      return res.status(400).json({message:"User not found"})
+    }
+    const fetchList = existingUser.wishlist;
+    console.log(fetchList,"wishlist fetched")
+    return res.status(200).json({success:true, message:"Wishlist", wishlist:existingUser.wishlist })
+  } catch (error) {
+    console.log("Error getting wishlist");
+    return res.status(500).json({success: false, message:"error server"})
+  }
+}

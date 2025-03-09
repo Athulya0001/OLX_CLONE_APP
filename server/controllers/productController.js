@@ -72,26 +72,23 @@ export const productDetails = async (req, res) => {
 
 // add to wishlist
 export const wishlist = async (req, res) => {
-  const user=req.user;
-  const {ProductId} =req.body;
+  const {productId, userId} = req.body;
    try {
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const userId = user._id;
+    // const existingUser = await User.findOne({ userId });
     const userFind = await User.findById(userId);
+    console.log(userId,"user");
 
     const isWishlisted = userFind.wishlist.includes(productId);
     console.log(isWishlisted,"wish")
-    // if (isWishlisted) {
-    //   userFind.wishlist = userFind.wishlist.filter(id => id.toString() !== productId);
-    // } else {
-    //   userFind.wishlist.push(productId);
-    // }
+    if (isWishlisted) {
+      return res.status(400).json({message: "Item already added to wishlist"});
+    }
+    userFind.wishlist.push(productId);
+    console.log(userFind,"wishlist added")
 
-    // await userFind.save();
-    return res.json({ user: userFind });
+    await userFind.save();
+    return res.json({success: true, message: "Items added to wishlist", user: userFind });
   } catch (error) {
     console.error("Error updating wishlist:", error);
     res.status(500).json({ message: "Server error" });
@@ -113,9 +110,9 @@ export const searchProducts = async (req, res) => {
       ]
     }).select("title category"); // Select only needed fields
 
-    res.json(products);
+    return res.json(products);
   } catch (error) {
     console.error("Search Error:", error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 }

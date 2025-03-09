@@ -6,6 +6,7 @@ import Home from "./pages/Home/Home";
 import SelectCategory from "./components/Post/SelectCategory";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import OtpVerification from "./components/Verify/OtpVerification";
+import Wishlist from "./components/GetWishlist/WIshlist";
 
 const App = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const App = () => {
         {token && <Route path="/home" element={<Home user={user}/>} />}
         <Route path="/post-category" element={<SelectCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/wishlist" element={<Wishlist/>}/>
       </Routes>
     </div>
   );

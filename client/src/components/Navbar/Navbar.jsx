@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../ReduxStore/Reducers/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/olx-logo.png";
+import { FaHeart } from "react-icons/fa";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -78,6 +79,11 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {token ? (
               <div className="flex justify-between items-center gap-x-3">
+                <Link to={"/wishlist"}>
+                <div className="flex justify-center items-center">
+                  <FaHeart className="h-6 w-6 text-red-500" />
+                </div>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="text-gray-700 underline"
