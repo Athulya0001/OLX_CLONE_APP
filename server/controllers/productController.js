@@ -79,41 +79,42 @@ export const productDetails = async (req, res) => {
 // add to wishlist
 export const wishlist = async (req, res) => {
   const { productId } = req.body;
-  console.log(productId, "id");
-  console.log(req.user, "user after decoded");
+
   const userId = req.user.id;
+
   try {
-    // const existingUser = await User.findOne({ userId });
     const userFind = await User.findById(userId);
-    // console.log(userId,"user");
 
     if (!userFind) {
-      return res
-        .status(404)
-        .json({ success: false, message: "user not found" });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
     const isWishlisted = userFind.wishlist.includes(productId);
-    console.log(isWishlisted, "wish");
-    if (!isWishlisted) {
+    console.log(isWishlisted, "wishlisted");
+
+    if (isWishlisted) {
+      userFind.wishlist = userFind.wishlist.filter((id) => id.toString() !== productId);
+      await userFind.save();
+      return res.status(200).json({
+        success: true,
+        message: "Item removed from wishlist",
+        id: productId,
+      });
+    } else {
       userFind.wishlist.push(productId);
       await userFind.save();
-      return res
-        .status(200)
-        .json({
-          success: true,
-          message: "item added successfullly",
-          id: productId,
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Item added successfully",
+        id: productId,
+      });
     }
-    return res
-      .status(401)
-      .json({ success: false, message: "item already added to wishlist" });
   } catch (error) {
     console.error("Error updating wishlist:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const searchProducts = async (req, res) => {
   try {

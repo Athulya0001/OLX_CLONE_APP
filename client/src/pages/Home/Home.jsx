@@ -5,18 +5,22 @@ import CategoryMenu from "../../components/Category/Category";
 import Cards from "../../components/Cards/Cards";
 import Footer from "../../components/Footer/Footer";
 import Banner from "../../components/Banner/Banner";
+import {useDispatch, useSelector } from 'react-redux';
+import { allProducts } from "../../ReduxStore/Reducers/productSlice";
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
-  const [sortOption, setSortOption] = useState("");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
+  const { products, items } = useSelector((state) => state.product || { items: [], products: [] });  const [sortOption, setSortOption] = useState("");
 
+  console.log(products,"home products")
   useEffect(() => {
     axios
       .get("http://localhost:3000/products")
-      .then((res) => setProducts(res.data))
+      .then((res) => {
+        dispatch(allProducts({ products: res.data }));
+      })
       .catch((err) => console.error("Error fetching products:", err));
-  }, []);
+  }, [dispatch]);
 
   const sortedProducts = [...products].sort((a, b) => {
     switch (sortOption) {
@@ -37,34 +41,31 @@ const Home = () => {
     <div className="flex flex-col justify-center items-center">
       <Navbar />
       <CategoryMenu />
-
-      <Banner/>
+      <Banner />
 
       <div className="flex justify-between items-center w-full px-6 py-3">
-  <h3 className="text-xl">Fresh Recommendations</h3>
-  <select
-    value={sortOption}
-    onChange={(e) => setSortOption(e.target.value)}
-    className="border px-2 rounded bg-white"
-  >
-    <option value="">Sort By</option>
-    <option value="newest">Newest</option>
-    <option value="oldest">Oldest</option>
-    <option value="lowToHigh">Price: Low to High</option>
-    <option value="highToLow">Price: High to Low</option>
-  </select>
-</div>
-      <div className="flex flex-wrap items-center justify-center gap-10">
-        {sortedProducts.length === 0 ? (
-          <p className="text-gray-500">No products available</p>
-        ) : (
-          sortedProducts.map((product) => (
-            <Cards key={product._id} product={product} user={user} />
-          ))
-        )}
+        <h3 className="text-xl">Fresh Recommendations</h3>
+        <select
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+          className="border px-2 rounded bg-white"
+        >
+          <option value="">Sort By</option>
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="lowToHigh">Price: Low to High</option>
+          <option value="highToLow">Price: High to Low</option>
+        </select>
       </div>
 
-      <Footer/>
+      <div className="flex flex-wrap items-center justify-center gap-10">
+      {sortedProducts.map((productId) => {
+  const fullProduct = items.find((item) => item._id === productId);
+  return fullProduct ? <Cards key={fullProduct._id} product={fullProduct} /> : null;
+})}
+      </div>
+
+      <Footer />
     </div>
   );
 };

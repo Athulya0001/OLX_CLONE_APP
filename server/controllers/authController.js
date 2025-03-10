@@ -5,12 +5,10 @@ import dotenv from "dotenv";
 import { OAuth2Client } from "google-auth-library";
 
 dotenv.config();
-// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const registerUser = async (req, res) => {
   const { username, email, password, phone } = req.body;
   console.log(req.body);
-  // console.log(req.body,"req body")
 
   try {
     const existingUser = await User.findOne({ email });
@@ -20,26 +18,39 @@ export const registerUser = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User already exists" });
     }
-    // const salt = await bcrypt.genSalt();
+
+    const otp = crypto.randomInt(100000, 999999).toString();
+     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log(hashedPassword,"password")
-    const newUser = User.create({
-      username,
-      email,
-      password: hashedPassword,
-      phone,
-    });
-
-    await newUser.save();
-    return res
-      .status(201)
-      .json({
-        success: true,
-        message: "User registered successfully",
-        user: newUser,
-      });
-  } catch (error) {
+ 
+    await User.create({
+       username,
+       email,
+       password: hashedPassword,
+       phone,
+       otp,
+       otpExpires,
+       verified: false,
+     });
+ 
+     const transporter = nodemailer.createTransport({
+       service: "Gmail",
+       auth: {
+         user: process.env.EMAIL_USER,
+         pass: process.env.EMAIL_PASS,
+       },
+     });
+ 
+ 
+     await transporter.sendMail({
+       from: process.env.EMAIL_USER,
+       to: email,
+       subject: "Your OTP Code",
+       html: `<p>Your OTP code is <b>${otp}</b>. It will expire in 10 minutes.</p>`,
+     });
+     return res.status(200).json({ success: true, message: "OTP sent to your email" });
+    }catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -78,12 +89,6 @@ export const loginUser = async (req, res) => {
       expiresIn: "1h",
     });
 
-    // res.cookie("token", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   maxAge: 3600000,
-    // });
-
     res.cookie("token", token, { expires: new Date(Date.now() + 3600000) });
     return res.json({
       success: true,
@@ -113,7 +118,7 @@ export const getUser = async (req, res) => {
       .status(200)
       .json({ success: true, message: "user found", user: user });
   } catch (error) {
-    return res.status(500).json({ success: false, message: "user not found" });
+    return res.status(500).json({ success: false, message: "server error" });
   }
 };
 
@@ -190,25 +195,25 @@ export const verifyOtp = async (req, res) => {
 };
 
 // get wishlist
-export const getWishlist = async (req, res) => {
-  const { wishlist, userId } = req.body;
+// export const getWishlist = async (req, res) => {
+//   const { wishlist, userId } = req.body;
 
-  try {
-    const existingUser = await User.findById(userId);
-    if (!existingUser) {
-      return res.status(400).json({ message: "User not found" });
-    }
-    const fetchList = existingUser.wishlist;
-    console.log(fetchList, "wishlist fetched");
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Wishlist",
-        wishlist: existingUser.wishlist,
-      });
-  } catch (error) {
-    console.log("Error getting wishlist");
-    return res.status(500).json({ success: false, message: "error server" });
-  }
-};
+//   try {
+//     const existingUser = await User.findById(userId);
+//     if (!existingUser) {
+//       return res.status(400).json({ message: "User not found" });
+//     }
+//     const fetchList = existingUser.wishlist;
+//     console.log(fetchList, "wishlist fetched");
+//     return res
+//       .status(200)
+//       .json({
+//         success: true,
+//         message: "Wishlist",
+//         wishlist: existingUser.wishlist,
+//       });
+//   } catch (error) {
+//     console.log("Error getting wishlist");
+//     return res.status(500).json({ success: false, message: "error server" });
+//   }
+// };
