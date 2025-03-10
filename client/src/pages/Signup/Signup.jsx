@@ -38,7 +38,7 @@ const SignUp = () => {
         setMessage("OTP Send to your email. Please Verify...");
         // localStorage.setItem("token", JSON.stringify(data.token || ""));
         // dispatch(registerUser({ username: formData.username, email: formData.email,phone: formData.phone, isVerified: false }));
-        navigate("/verify-otp", { state: { email: formData.email } });
+        navigate("/verify-otp", { state: formData });
       } else {
         setMessage(data.message);
       }

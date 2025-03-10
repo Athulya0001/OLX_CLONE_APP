@@ -21,11 +21,10 @@ const SignIn = () => {
     if (data.success) {
       if (data.user.verified === false) {
         alert("Your email is not verified. Please check your email.");
+
         return;
       }
-      localStorage.setItem("token", JSON.stringify(data.token));
-      localStorage.setItem("user", JSON.stringify(data.user));
-      dispatch(login({ email, user: data.user, token: data.token }));
+      dispatch(login({ user: data.user, token: data.token }));
       navigate("/home");
     } else {
       alert("Invalid credentials or user not found. Please try again.");

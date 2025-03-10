@@ -10,7 +10,6 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user)
 
   useEffect(() => {
     axios

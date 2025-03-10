@@ -20,7 +20,7 @@ productRouter.post("/newpost", upload.single("image"), addProduct);
 productRouter.get('/', allProducts)
 productRouter.get('/category', category)
 productRouter.get('/:id', productDetails)
-productRouter.post('/wishlist', wishlist)
+productRouter.post('/wishlist',authCheck, wishlist)
 // productRouter.get("/search", searchProducts);
 
 export default productRouter

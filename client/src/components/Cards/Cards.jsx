@@ -2,60 +2,65 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
-const Cards = ({ product, user }) => {
-  const [wishlist, setWishlist] = useState([]);
+const Cards = ({ product }) => {
+  const [wishlist, setWishlist] = useState("");
+
   const navigate = useNavigate();
-  const userId = user._id;
 
-  useEffect(() => {
-    const fetchWishlist = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/api/auth/wishlist",
-          {body: {wishlist,userId}}
-        );
-        console.log(response,"res")
-        setWishlist(response.data.wishlist);
-      } catch (error) {
-        console.error("Error fetching wishlist:", error);
-      }
-    };
+  const { token, user } = useSelector((state) => state.auth);
+  const itemInWishlist=user.wishlist
+  console.log(itemInWishlist)
 
-    fetchWishlist();
-  }, []);
-  console.log(user,"user wish")
+  // useEffect(() => {
+  //   const fetchWishlist = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://localhost:3000/api/auth/wishlist",
+  //         { body: { wishlist, userId } }
+  //       );
+  //       console.log(response, "res");
+  //       setWishlist(response.data.wishlist);
+  //     } catch (error) {
+  //       console.error("Error fetching wishlist:", error);
+  //     }
+  //   };
+
+  //   fetchWishlist();
+  // }, []);
   const handleWishlist = async (productId) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/products/wishlist`,
+        "http://localhost:3000/products/wishlist",
+        {
+          productId,
+        },
         {
           headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(productId, userId)
         }
       );
-      const data = await response.json()
-      console.log(data,"res")
-      setWishlist(response.data.wishlist);
+
+      setWishlist(response.data.id);
     } catch (error) {
       console.error("Error updating wishlist:", error);
     }
   };
-  
 
   return (
     <div className="flex flex-col relative justify-center items-center bg-slate-50 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[280px] p-4 cursor-pointer">
       <div className="flex absolute top-2 right-2">
-        <button onClick={() => handleWishlist(product._id)}>
-          {wishlist.includes(product._id) ? (
-            <FaHeart className="h-6 w-6 text-red-500" />
-          ) : (
-            <FaRegHeart className="h-6 w-6 text-gray-500" />
-          )}
-        </button>
+        {
+          itemInWishlist.map((item)=>{
+            return item===product._id ? <button > 
+              <FaHeart className="" color="red"/>
+            </button> : <button>
+              <FaHeart className="" color="gray"/>
+            </button>
+          })
+        }
       </div>
 
       <div

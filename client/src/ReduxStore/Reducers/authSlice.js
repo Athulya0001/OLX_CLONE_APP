@@ -4,24 +4,28 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: JSON.parse(localStorage.getItem("user")) || null,
-    isAuthenticated: JSON.parse(localStorage.getItem("isAuthenticated")) || false,
+    isAuthenticated:
+      JSON.parse(localStorage.getItem("isAuthenticated")) !== "" || false,
     token: JSON.parse(localStorage.getItem("token")) || null,
     wishlist: JSON.parse(localStorage.getItem("wishlist")) || [],
   },
   reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+
     registerUser: (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = false;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     login: (state, action) => {
-      const { user, token } = action.payload;
+      const { token, user } = action.payload;
+      console.log(token, user);
       state.user = user;
-      state.token = token;
       state.isAuthenticated = true;
-      localStorage.setItem("user", JSON.stringify(user));
+      state.token = token;
       localStorage.setItem("token", JSON.stringify(token));
-      localStorage.setItem("isAuthenticated", JSON.stringify(true));
     },
     logout: (state) => {
       state.user = null;
@@ -37,7 +41,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { registerUser, login, logout, setWishlist } = authSlice.actions;
+export const { registerUser, login, logout, setWishlist,setUser } = authSlice.actions;
 export const selectUser = (state) => state.auth.user;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 

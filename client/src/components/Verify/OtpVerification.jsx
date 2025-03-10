@@ -8,7 +8,8 @@ const OtpVerification = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const email = location.state?.email || "";
+  const email = location.state?.formData.email || "";
+  console.log(location.state?.formData);
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
@@ -16,11 +17,14 @@ const OtpVerification = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/auth/verify-otp",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp }),
+        }
+      );
 
       const data = await response.json();
 
@@ -44,12 +48,21 @@ const OtpVerification = () => {
         <p className="text-gray-700 mt-4">Enter the OTP sent to {email}</p>
         {message && <p className="text-red-500">{message}</p>}
         <form onSubmit={handleVerifyOtp} className="space-y-4">
-          <input type="text" name="otp" placeholder="Enter OTP" value={otp} 
-            onChange={(e) => setOtp(e.target.value)} required 
-            className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1 text-center text-xl" />
-          <button type="submit" className="w-full bg-teal-900 text-white font-bold py-3 rounded 
+          <input
+            type="text"
+            name="otp"
+            placeholder="Enter OTP"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            required
+            className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1 text-center text-xl"
+          />
+          <button
+            type="submit"
+            className="w-full bg-teal-900 text-white font-bold py-3 rounded 
             hover:bg-white hover:text-teal-900 hover:border-2 hover:border-teal-900 transition"
-            disabled={loading}>
+            disabled={loading}
+          >
             {loading ? "Verifying..." : "Verify OTP"}
           </button>
         </form>

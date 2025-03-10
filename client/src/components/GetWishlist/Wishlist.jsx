@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import GetWishlist from './GetWIshlist';
+import GetWishlist from './GetWishlist';
 
 const Wishlist = () => {
 

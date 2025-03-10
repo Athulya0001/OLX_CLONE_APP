@@ -9,6 +9,7 @@ dotenv.config();
 
 export const registerUser = async (req, res) => {
   const { username, email, password, phone } = req.body;
+  console.log(req.body);
   // console.log(req.body,"req body")
 
   try {
@@ -33,7 +34,11 @@ export const registerUser = async (req, res) => {
     await newUser.save();
     return res
       .status(201)
-      .json({ success: true, message: "User registered successfully" });
+      .json({
+        success: true,
+        message: "User registered successfully",
+        user: newUser,
+      });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
@@ -83,11 +88,7 @@ export const loginUser = async (req, res) => {
     return res.json({
       success: true,
       token,
-      user: {
-        username: user.username,
-        email: user.email,
-        _id: user._id,
-      },
+      user: user,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -96,6 +97,23 @@ export const loginUser = async (req, res) => {
       message: "Internal server error",
       error: error.message,
     });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "user not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "user found", user: user });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "user not found" });
   }
 };
 
@@ -160,7 +178,11 @@ export const verifyOtp = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "OTP verified. Registration complete!" });
+      .json({
+        success: true,
+        message: "OTP verified. Registration complete!",
+        user: user,
+      });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: "Server error" });
@@ -168,19 +190,25 @@ export const verifyOtp = async (req, res) => {
 };
 
 // get wishlist
-export const getWishlist = async(req, res) => {
-  const {wishlist, userId} = req.body;
+export const getWishlist = async (req, res) => {
+  const { wishlist, userId } = req.body;
 
   try {
     const existingUser = await User.findById(userId);
-    if(!existingUser){
-      return res.status(400).json({message:"User not found"})
+    if (!existingUser) {
+      return res.status(400).json({ message: "User not found" });
     }
     const fetchList = existingUser.wishlist;
-    console.log(fetchList,"wishlist fetched")
-    return res.status(200).json({success:true, message:"Wishlist", wishlist:existingUser.wishlist })
+    console.log(fetchList, "wishlist fetched");
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Wishlist",
+        wishlist: existingUser.wishlist,
+      });
   } catch (error) {
     console.log("Error getting wishlist");
-    return res.status(500).json({success: false, message:"error server"})
+    return res.status(500).json({ success: false, message: "error server" });
   }
-}
+};
