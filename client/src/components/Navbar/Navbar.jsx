@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../ReduxStore/Reducers/authSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,9 +10,10 @@ import Profile from "../../assets/profile-logo.png";
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showComponent, setShowComponent] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  const [showProfile, setShowProfile] = useState(false);
   const { token } = useSelector((state) => state.auth);
+  const languages = ["English", "Hindi", "Spanish", "French", "German"];
+
   const handleLogout = () => {
     const isConfirmed = window.confirm("Are you sure you want to Logout?");
     if (isConfirmed) {
@@ -20,25 +21,29 @@ const Navbar = () => {
       navigate("/");
     }
   };
-  const handleToast = () => {
-    alert("Please Signin");
+
+  const handleClickOutside = (event) => {
+    if (!event.target.closest("#profile-menu")) {
+      setShowProfile(false);
+    }
   };
-  const handleProfile = () => {
-    setShowComponent(!showComponent);
-  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="flex justify-center items-center fixed top-7">
-      <nav className="bg-gray-100 fixed w-full p-2 shadow-md">
-        <div className="mx-auto flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="mr-4">
-              <img src={Logo} alt="Logo" className="h-10" />
-            </div>
-          </div>
+    <div className="fixed top-0 left-0 w-full bg-gray-100 shadow-md z-50">
+      <nav className="w-full max-w-7xl mx-auto p-3 flex justify-between items-center">
+        <Link to="/">
+          <img src={Logo} alt="Logo" className="h-10" />
+        </Link>
 
-          <div className="relative hidden md:flex justify-between items-center border-2 border-gray-800 rounded-md bg-white w-2/5">
-            <input
+        <div className="hidden md:flex justify-between items-center border border-gray-400 rounded-md bg-white w-2/5">
+        <input
               type="search"
               placeholder="Search products..."
               className="outline-none border-none px-2 py-1 w-64"
@@ -59,48 +64,55 @@ const Navbar = () => {
                 ></path>
               </svg>
             </button>
-          </div>
+        </div>
 
+        <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center">
-            <span className="font-bold text-sm mr-1">ENGLISH</span>
-            <svg
-              className="h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19 9l-7 7-7-7"
-              ></path>
-            </svg>
+          <select className="px-3 py-2">
+  {languages.map((lang, index) => (
+    <option key={index} value={lang}>
+      {lang}
+    </option>
+  ))}
+</select>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <div className="flex flex-col">
-              <button onClick={handleProfile}>
-                <img className="h-10 w-10" src={Profile} alt="Profile" />
-              </button>
-              {showComponent && <UserProfile />}
-            </div>
-            {token ? (
-              <div className="flex justify-between items-center gap-x-3">
-                <Link to={"/wishlist"}>
-                  <div className="flex justify-center items-center">
+          <div className="relative">
+            <button
+              id="profile-menu"
+              onClick={() => setShowProfile(!showProfile)}
+            >
+              <img className="h-10 w-10 rounded-full" src={Profile} alt="Profile" />
+            </button>
+
+            {showProfile && (
+              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2 z-50">
+                <UserProfile />
+                <hr className="my-2" />
+                {token && (
+                  <>
+                    <Link to="/wishlist" className="block px-3 py-2 hover:bg-gray-100">
                     <FaHeart className="h-6 w-6 text-red-500" />
-                  </div>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="text-gray-700 underline"
-                >
-                  Logout
-                </button>
-                <Link to={"/post-category"}>
-                  <div className="border-3 border-r border-b border-amber-500 rounded-xl">
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+                    >
+                      🚪 Logout
+                    </button>
+                  </>
+                )}
+                {!token && (
+                  <Link to="/login" className="block px-3 py-2 hover:bg-gray-100">
+                    🔑 Login
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+
+          <Link to={token ? "/post-category" : "#"}>
+          <div className="border-3 border-r border-b border-amber-500 rounded-xl">
                     <span className="bg-white text-black px-4 py-2 rounded-xl flex items-center border-3 border-t border-l border-blue-500">
                       <svg
                         className="h-5 w-5 mr-1"
@@ -119,40 +131,7 @@ const Navbar = () => {
                       <span>SELL</span>
                     </span>
                   </div>
-                </Link>
-              </div>
-            ) : (
-              <div className="flex justify-between items-center gap-x-4">
-                <a href="/" className="text-gray-700 underline">
-                  Login
-                </a>
-                <Link to={"/"}>
-                  <div className="border-3 border-r border-b border-amber-500 rounded-xl">
-                    <button
-                      onClick={handleToast}
-                      className="bg-white text-black px-4 py-2 rounded-xl flex items-center border-3 border-t border-l border-blue-500"
-                    >
-                      <svg
-                        className="h-5 w-5 mr-1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 4v16m8-8H4"
-                        ></path>
-                      </svg>
-                      <span>SELL</span>
-                    </button>
-                  </div>
-                </Link>
-              </div>
-            )}
-          </div>
+          </Link>
         </div>
       </nav>
     </div>
