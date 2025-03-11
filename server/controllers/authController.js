@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { OAuth2Client } from "google-auth-library";
+import nademailer from 'nodemailer';
 
 dotenv.config();
 

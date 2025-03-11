@@ -21,7 +21,7 @@ const App = () => {
       navigate("/");
     }
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   const fetchUserData = async () => {
     try {

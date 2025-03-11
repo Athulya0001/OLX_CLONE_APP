@@ -12,7 +12,6 @@ const Home = () => {
   const dispatch = useDispatch();
   const { products, items } = useSelector((state) => state.product || { items: [], products: [] });  const [sortOption, setSortOption] = useState("");
 
-  console.log(products,"home products")
   useEffect(() => {
     axios
       .get("http://localhost:3000/products")

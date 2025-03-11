@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [owner, setOwner] = useState(null);
   const [requestSent, setRequestSent] = useState(false);
+  const {user} = useSelector((state=>state.auth))
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -24,7 +26,6 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
-  const user = JSON.parse(localStorage.getItem("user"))
 
   const userEmail = user.email;
   const fetchRequest = async (ownerEmail) => {

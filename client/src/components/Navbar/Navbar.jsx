@@ -1,20 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../ReduxStore/Reducers/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/olx-logo.png";
 import { FaHeart } from "react-icons/fa";
+import UserProfile from "../UserProfile/UserProfile";
+import Profile from "../../assets/profile-logo.png";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showComponent, setShowComponent] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const token = JSON.parse(localStorage.getItem("token"))
-
+  const { token } = useSelector((state) => state.auth);
   const handleLogout = () => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to Logout?"
-    );
+    const isConfirmed = window.confirm("Are you sure you want to Logout?");
     if (isConfirmed) {
       dispatch(logout());
       navigate("/");
@@ -22,6 +22,9 @@ const Navbar = () => {
   };
   const handleToast = () => {
     alert("Please Signin");
+  };
+  const handleProfile = () => {
+    setShowComponent(!showComponent);
   };
 
   return (
@@ -77,12 +80,18 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
+            <div className="flex flex-col">
+              <button onClick={handleProfile}>
+                <img className="h-10 w-10" src={Profile} alt="Profile" />
+              </button>
+              {showComponent && <UserProfile />}
+            </div>
             {token ? (
               <div className="flex justify-between items-center gap-x-3">
                 <Link to={"/wishlist"}>
-                <div className="flex justify-center items-center">
-                  <FaHeart className="h-6 w-6 text-red-500" />
-                </div>
+                  <div className="flex justify-center items-center">
+                    <FaHeart className="h-6 w-6 text-red-500" />
+                  </div>
                 </Link>
                 <button
                   onClick={handleLogout}

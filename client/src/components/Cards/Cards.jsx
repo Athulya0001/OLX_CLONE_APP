@@ -1,16 +1,19 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
-import {setWishlist} from '../../ReduxStore/Reducers/authSlice'
+import { setWishlist } from "../../ReduxStore/Reducers/authSlice";
+import { useEffect, useState } from "react";
 
 const Cards = ({ product }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  const { token, wishlist } = useSelector((state) => state.auth);
-  const isWishlisted = wishlist.includes(product._id);
+
+  const { token, user } = useSelector((state) => state.auth);
+  const isWishlisted = user?.wishlist.includes(product._id);
+  const [updatedWishlist, setUpdatedWishlist] = useState([]);
+
+  useEffect(() => {}, [updatedWishlist]);
 
   const handleWishlist = async () => {
     try {
@@ -23,10 +26,13 @@ const Cards = ({ product }) => {
       );
 
       if (response.data.success) {
-        const updatedWishlist = isWishlisted
-          ? wishlist.filter((id) => id !== product._id)
-          : [...wishlist, product._id];
-          console.log(wishlist,"wishlist")
+        console.log(response.data, "data");
+        // const existingWishlist = response.data.id;
+        const matchWishlist = isWishlisted
+          ? user.wishlist.filter((id) => id !== product._id)
+          : [...user.wishlist, product._id];
+
+        setUpdatedWishlist(matchWishlist);
 
         dispatch(setWishlist(updatedWishlist));
       }
@@ -36,12 +42,14 @@ const Cards = ({ product }) => {
   };
 
   return (
-    <div
-      className="flex flex-col relative justify-center items-center bg-slate-50 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[280px] p-4 cursor-pointer"
-    >
+    <div className="flex flex-col relative justify-center items-center bg-slate-50 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[280px] p-4 cursor-pointer">
       {/* Wishlist Button */}
       <button className="absolute top-2 right-2" onClick={handleWishlist}>
-        <FaHeart className={`transition-colors duration-300 ${isWishlisted ? "text-red-500" : "text-gray-400"}`} />
+        <FaHeart
+          className={`transition-colors duration-300 ${
+            isWishlisted ? "text-red-500" : "text-gray-400"
+          }`}
+        />
       </button>
 
       {/* Product Image */}
@@ -62,9 +70,13 @@ const Cards = ({ product }) => {
 
       {/* Product Details */}
       <div className="p-3 flex flex-col gap-2 text-center">
-        <p className="text-xl font-bold text-[#000030]">&#x20B9; {product.price}</p>
+        <p className="text-xl font-bold text-[#000030]">
+          &#x20B9; {product.price}
+        </p>
         <span className="text-sm text-gray-500">{product.category}</span>
-        <p className="text-base text-gray-800 font-semibold truncate">{product.title}</p>
+        <p className="text-base text-gray-800 font-semibold truncate">
+          {product.title}
+        </p>
       </div>
 
       {/* Product Date */}

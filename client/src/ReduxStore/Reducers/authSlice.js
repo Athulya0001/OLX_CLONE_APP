@@ -27,16 +27,16 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       state.token = null;
-      state.wishlist = [];
       localStorage.removeItem("token");
     },
     setWishlist: (state, action) => {
+      console.log(action.payload)
       state.wishlist = action.payload;
     },
   },
 });
 
-export const { registerUser, login, logout, setWishlist,setUser } = authSlice.actions;
+export const { registerUser, login, logout,setUser,setWishlist } = authSlice.actions;
 export const selectUser = (state) => state.auth.user;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 
