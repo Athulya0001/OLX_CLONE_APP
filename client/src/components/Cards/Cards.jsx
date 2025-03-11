@@ -39,7 +39,6 @@ const Cards = ({ product }) => {
 
   return (
     <div className="flex flex-col relative justify-center items-center bg-slate-50 shadow-lg rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 w-[280px] p-4 cursor-pointer">
-      {/* Wishlist Button */}
       <button className="absolute top-2 right-2" onClick={handleWishlist}>
         <FaHeart
           className={`transition-colors duration-300 ${
@@ -48,7 +47,6 @@ const Cards = ({ product }) => {
         />
       </button>
 
-      {/* Product Image */}
       <div
         className="flex justify-center w-full h-[140px] overflow-hidden"
         onClick={() => navigate(`/product/${product._id}`)}

@@ -10,6 +10,7 @@ import Wishlist from "../src/components/GetWishlist/Wishlist";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./ReduxStore/Reducers/authSlice";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -19,9 +20,10 @@ const App = () => {
   useEffect(() => {
     if (!token) {
       navigate("/");
+    } else {
+      fetchUserData();
     }
-    fetchUserData();
-  }, [navigate]);
+  }, [navigate, token]);
 
   const fetchUserData = async () => {
     try {
@@ -33,15 +35,23 @@ const App = () => {
 
       const data = await response.data;
       dispatch(setUser(response.data.user));
-      console.log(data);
     } catch (error) {
       console.log(error.message);
     }
   };
   return (
     <div>
+      <ToastContainer
+          position="top-right"
+          autoClose={3000} // Closes after 3 seconds
+          hideProgressBar={false}
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="light"
+        />
       <Routes>
-        <Route path="/" element={token ? <Home /> : <Signin />} />
+        <Route path="/" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-otp" element={<OtpVerification />} />{" "}
         {token && <Route path="/home" element={<Home />} />}

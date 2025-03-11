@@ -2,7 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import nademailer from 'nodemailer';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -122,32 +122,33 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const request = (req, res) => {
+export const request = async (req, res) => {
   const { ownerEmail, message, userEmail } = req.body;
 
-  const mailOptions = {
-    from: userEmail,
-    to: ownerEmail,
-    subject: "Request for Details",
-    text: message || "No message provided.",
-  };
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: ownerEmail,
+      subject: "Request for Details",
+      html: `<p><b>Message:</b> ${message}</p><p><b>From:</b> ${userEmail}</p>`,
+      replyTo: userEmail,
+    };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return res.status(500).json({ message: "Failed to send email", error });
-    }
-    res
-      .status(200)
-      .json({ success: true, message: "Request sent successfully!" });
-  });
+    await transporter.sendMail(mailOptions);
+    return res.status(200).json({ success: true, message: "Requested details sent" });
+
+  } catch (error) {
+    console.error("Nodemailer Error:", error);
+    return res.status(500).json({ success: false, message: "Error sending mail" });
+  }
 };
 
 export const verifyOtp = async (req, res) => {
@@ -193,27 +194,3 @@ export const verifyOtp = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-// get wishlist
-// export const getWishlist = async (req, res) => {
-//   const { wishlist, userId } = req.body;
-
-//   try {
-//     const existingUser = await User.findById(userId);
-//     if (!existingUser) {
-//       return res.status(400).json({ message: "User not found" });
-//     }
-//     const fetchList = existingUser.wishlist;
-//     console.log(fetchList, "wishlist fetched");
-//     return res
-//       .status(200)
-//       .json({
-//         success: true,
-//         message: "Wishlist",
-//         wishlist: existingUser.wishlist,
-//       });
-//   } catch (error) {
-//     console.log("Error getting wishlist");
-//     return res.status(500).json({ success: false, message: "error server" });
-//   }
-// };

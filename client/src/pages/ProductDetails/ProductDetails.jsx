@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -27,7 +28,7 @@ const ProductDetails = () => {
   }, [id]);
 
 
-  const userEmail = user.email;
+  const userEmail = user?.email;
   const fetchRequest = async (ownerEmail) => {
     try {
       const response = await axios.post('http://localhost:3000/api/auth/request', {
@@ -36,7 +37,8 @@ const ProductDetails = () => {
       });
       const data = await response.data;
       if(data.success){
-        setRequestSent(true)
+        setRequestSent(true);
+        toast.success(data.message);
       }
       console.log(data, "data");
     } catch (error) {
@@ -47,64 +49,78 @@ const ProductDetails = () => {
   if (!product) return <p className="text-center text-xl">Loading...</p>;
 
   return (
-    <div className="flex flex-col">
-      <header>
-        <div className="bg-gray-100 p-3">
-          <Link to={"/home"}>
-            <button>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="50"
-                height="50"
-                viewBox="0 0 50 50"
-                className="text-gray-600"
-              >
-                <path
-                  d="M30 15 L20 25 L30 35"
-                  stroke="black"
-                  strokeWidth="4"
-                  fill="none"
-                />
-              </svg>
-            </button>
-          </Link>
-        </div>
-      </header>
-      <div className="max-w-4xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">{product.title}</h1>
-        <div className="flex flex-col md:flex-row gap-4">
-          <img
-            src={`http://localhost:3000${product.images[0]}`}
-            alt={product.title}
-            className="w-full md:w-1/2 rounded-lg shadow-lg"
+    <div className="flex flex-col min-h-screen bg-gray-100">
+  <header className="bg-white shadow-md sticky top-0 z-50 p-3">
+    <Link to="/home">
+      <button className="flex items-center space-x-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="40"
+          viewBox="0 0 50 50"
+          className="text-gray-600"
+        >
+          <path
+            d="M30 15 L20 25 L30 35"
+            stroke="black"
+            strokeWidth="4"
+            fill="none"
           />
-          <div className="md:w-1/2 space-y-4">
-            <p className="text-xl font-bold text-green-600">
-              &#x20B9; {product.price}
-            </p>
-            <p className="text-gray-700">{product.description}</p>
-            <span className="text-sm text-gray-500">
-              Category: {product.category}
-            </span>
-            <p className="text-xs text-gray-400">
-              Posted on: {new Date(product.createdAt).toDateString()}
-            </p>
+        </svg>
+        <span className="text-lg font-medium text-gray-600">Back</span>
+      </button>
+    </Link>
+  </header>
 
-            {/* Owner Details */}
-             {owner && (
-                            <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-                                <h2 className="text-lg font-semibold">{owner.username}</h2>
-                            </div>
-                        )}
-            <div>
-              <button className="px-2 bg-[#002f34] text-white font-bold py-2 rounded-md hover:bg-white hover:text-[#002f34] hover:border-2 hover:border-[#002f34] transition-all" onClick={() => fetchRequest(owner.email)} >
-                Request Details
-              </button>
-            </div>
+  <div className="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+    <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+      <div className="relative">
+        <img
+          src={`http://localhost:3000${product.images[0]}`}
+          alt={product.title}
+          className="w-full h-96 object-cover rounded-lg shadow-md"
+        />
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-2xl font-bold text-green-600">&#x20B9; {product.price}</p>
+        <p className="text-gray-700">{product.description}</p>
+
+        <div className="text-sm text-gray-500">
+          <span className="block">Category: {product.category}</span>
+          <span className="block">Posted on: {new Date(product.createdAt).toDateString()}</span>
+        </div>
+
+        {owner && (
+          <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+            <h2 className="text-lg font-semibold">{owner.username}</h2>
           </div>
+        )}
+
+        <div>
+          {requestSent ? (
+            <button
+              className="w-full py-3 bg-gray-400 text-white font-bold rounded-lg cursor-not-allowed"
+              disabled
+            >
+              Requested
+            </button>
+          ) : (
+            <button
+              className="w-full py-3 bg-[#002f34] text-white font-bold rounded-lg hover:bg-white hover:text-[#002f34] hover:border-2 hover:border-[#002f34] transition-all"
+              onClick={() => fetchRequest(owner.email)}
+            >
+              Request Details
+            </button>
+          )}
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 

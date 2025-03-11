@@ -12,6 +12,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.product || { items: [] });  
   const [sortOption, setSortOption] = useState("");
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     axios
@@ -22,8 +23,9 @@ const Home = () => {
       .catch((err) => console.error("Error fetching products:", err));
   }, [dispatch]);
 
-  // ✅ Fix: Sort full product objects (items) instead of IDs (products)
-  const sortedProducts = [...items].sort((a, b) => {
+  const filteredProducts = items.filter((product) => product.owner !== user?._id);
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortOption) {
       case "newest":
         return new Date(b.createdAt) - new Date(a.createdAt);
@@ -39,12 +41,13 @@ const Home = () => {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center min-h-[80vh]">
       <Navbar />
       <CategoryMenu />
       <Banner />
 
-      <div className="flex justify-between items-center w-full px-6 py-3">
+      {sortedProducts.length===0?<p>No Items...</p>:(
+        <div className="flex justify-between items-center w-full px-6 py-3">
         <h3 className="text-xl">Fresh Recommendations</h3>
         <select
           value={sortOption}
@@ -58,6 +61,7 @@ const Home = () => {
           <option value="highToLow">Price: High to Low</option>
         </select>
       </div>
+      )}
 
       <div className="flex flex-wrap items-center justify-center gap-10">
         {sortedProducts.map((product) => (
@@ -69,6 +73,5 @@ const Home = () => {
     </div>
   );
 };
-
 
 export default Home;
