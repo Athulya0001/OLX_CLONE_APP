@@ -44,7 +44,6 @@ const App = () => {
         <Route path="/" element={token ? <Home /> : <Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-otp" element={<OtpVerification />} />{" "}
-        {/* New Route */}
         {token && <Route path="/home" element={<Home />} />}
         <Route path="/post-category" element={<SelectCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />

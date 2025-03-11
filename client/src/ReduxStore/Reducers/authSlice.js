@@ -30,9 +30,10 @@ const authSlice = createSlice({
       localStorage.removeItem("token");
     },
     setWishlist: (state, action) => {
-      console.log(action.payload)
-      state.wishlist = action.payload;
-    },
+      if (state.user) {
+        state.user = { ...state.user, wishlist: action.payload };
+      }
+    },    
   },
 });
 

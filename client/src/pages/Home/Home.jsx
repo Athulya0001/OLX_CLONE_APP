@@ -10,7 +10,8 @@ import { allProducts } from "../../ReduxStore/Reducers/productSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { products, items } = useSelector((state) => state.product || { items: [], products: [] });  const [sortOption, setSortOption] = useState("");
+  const { items } = useSelector((state) => state.product || { items: [] });  
+  const [sortOption, setSortOption] = useState("");
 
   useEffect(() => {
     axios
@@ -21,7 +22,8 @@ const Home = () => {
       .catch((err) => console.error("Error fetching products:", err));
   }, [dispatch]);
 
-  const sortedProducts = [...products].sort((a, b) => {
+  // ✅ Fix: Sort full product objects (items) instead of IDs (products)
+  const sortedProducts = [...items].sort((a, b) => {
     switch (sortOption) {
       case "newest":
         return new Date(b.createdAt) - new Date(a.createdAt);
@@ -58,15 +60,15 @@ const Home = () => {
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-10">
-      {sortedProducts.map((productId) => {
-  const fullProduct = items.find((item) => item._id === productId);
-  return fullProduct ? <Cards key={fullProduct._id} product={fullProduct} /> : null;
-})}
+        {sortedProducts.map((product) => (
+          <Cards key={product._id} product={product} />
+        ))}
       </div>
 
       <Footer />
     </div>
   );
 };
+
 
 export default Home;

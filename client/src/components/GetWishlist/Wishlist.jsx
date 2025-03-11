@@ -1,42 +1,37 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import GetWishlist from './GetWishlist';
+import {useSelector} from 'react-redux';
 
 const Wishlist = () => {
+  const { user } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.product); // Get all products from Redux
 
-    const [wishlist, setWishlist] = useState([]);
-    const [loading, setLoading] = useState(false);
 
-    useEffect(()=>{
-        const fetchWishlist = async () => {
-            try {
-              const response = await axios.get(
-                "http://localhost:3000/api/auth/wishlist",
-                {body: {wishlist,userId}}
-              );
-              console.log(response,"res")
-              setLoading(true);
-              setWishlist(response.data.wishlist);
-            } catch (error) {
-              console.error("Error fetching wishlist:", error);
-            }
-          };
+  const wishlistProducts = items.filter((product) =>
+    user?.wishlist.includes(product._id)
 
-          fetchWishlist()
-    },[])
+  );
+
   return (
-    <div>
-      {wishlist.length===0?(
-        <p>NO items Added to wishlist. Add items <Link to={"/home"}><span>Click here</span></Link></p>
-      ):(
-        <div>
-            {wishlist.map((items)=>{
-                <GetWishlist product={items}/>
-            })}
-        </div>
-      )}
+    <div className="p-6 flex flex-col items-center">
+  {wishlistProducts.length === 0 ? (
+    <p className="text-gray-600 text-lg text-center">
+      No items added to wishlist. Add items{" "}
+      <Link to="/home" className="text-blue-500 underline">
+        Click here
+      </Link>
+    </p>
+  ) : (
+    <div className="flex flex-col gap-4 w-full max-w-3xl">
+      {wishlistProducts.map((product) => (
+        <GetWishlist key={product._id} product={product} />
+      ))}
     </div>
-  )
-}
+  )}
+</div>
+
+  );
+};
 
 export default Wishlist

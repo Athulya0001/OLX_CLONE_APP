@@ -3,17 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { setWishlist } from "../../ReduxStore/Reducers/authSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 const Cards = ({ product }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { token, user } = useSelector((state) => state.auth);
-  const isWishlisted = user?.wishlist.includes(product._id);
-  const [updatedWishlist, setUpdatedWishlist] = useState([]);
-
-  useEffect(() => {}, [updatedWishlist]);
+  // const wishlist = useSelector((state) => state.auth.user?.wishlist || []);
+  const wishlist = useMemo(() => user?.wishlist || [], [user?.wishlist]);
+  const isWishlisted = wishlist.includes(product._id);
 
   const handleWishlist = async () => {
     try {
@@ -27,14 +26,11 @@ const Cards = ({ product }) => {
 
       if (response.data.success) {
         console.log(response.data, "data");
-        // const existingWishlist = response.data.id;
-        const matchWishlist = isWishlisted
-          ? user.wishlist.filter((id) => id !== product._id)
-          : [...user.wishlist, product._id];
+        const updatedWishlist = isWishlisted
+          ? wishlist.filter((id) => id !== product._id)
+          : [...wishlist, product._id];
 
-        setUpdatedWishlist(matchWishlist);
-
-        dispatch(setWishlist(updatedWishlist));
+        dispatch(setWishlist(updatedWishlist)); 
       }
     } catch (error) {
       console.error("Error updating wishlist:", error);
