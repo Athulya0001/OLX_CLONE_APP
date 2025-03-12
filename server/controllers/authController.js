@@ -123,6 +123,7 @@ export const getUser = async (req, res) => {
 };
 
 export const request = async (req, res) => {
+  console.log('fn call')
   const { ownerEmail, message, userEmail } = req.body;
 
   try {

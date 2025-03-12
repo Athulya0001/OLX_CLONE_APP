@@ -19,7 +19,12 @@ const App = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      if (
+        window.location.pathname !== "/signup" &&
+        window.location.pathname !== "/signin"
+      ) {
+        navigate("/");
+      }
     } else {
       fetchUserData();
     }
@@ -42,14 +47,14 @@ const App = () => {
   return (
     <div>
       <ToastContainer
-          position="top-right"
-          autoClose={3000} // Closes after 3 seconds
-          hideProgressBar={false}
-          closeOnClick
-          pauseOnHover
-          draggable
-          theme="light"
-        />
+        position="top-right"
+        autoClose={3000} // Closes after 3 seconds
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="light"
+      />
       <Routes>
         <Route path="/" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />

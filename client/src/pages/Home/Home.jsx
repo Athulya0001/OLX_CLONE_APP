@@ -1,16 +1,16 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar/Navbar";
 import CategoryMenu from "../../components/Category/Category";
 import Cards from "../../components/Cards/Cards";
 import Footer from "../../components/Footer/Footer";
 import Banner from "../../components/Banner/Banner";
-import {useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { allProducts } from "../../ReduxStore/Reducers/productSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { items } = useSelector((state) => state.product || { items: [] });  
+  const { items } = useSelector((state) => state.product || { items: [] });
   const [sortOption, setSortOption] = useState("");
   const { user } = useSelector((state) => state.auth);
 
@@ -23,7 +23,9 @@ const Home = () => {
       .catch((err) => console.error("Error fetching products:", err));
   }, [dispatch]);
 
-  const filteredProducts = items.filter((product) => product.owner !== user?._id);
+  const filteredProducts = items.filter(
+    (product) => product.owner !== user?._id
+  );
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortOption) {
@@ -46,21 +48,23 @@ const Home = () => {
       <CategoryMenu />
       <Banner />
 
-      {sortedProducts.length===0?<p>No Items...</p>:(
+      {sortedProducts.length === 0 ? (
+        <p>No Items...</p>
+      ) : (
         <div className="flex justify-between items-center w-full px-6 py-3">
-        <h3 className="text-xl">Fresh Recommendations</h3>
-        <select
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-          className="border px-2 rounded bg-white"
-        >
-          <option value="">Sort By</option>
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="lowToHigh">Price: Low to High</option>
-          <option value="highToLow">Price: High to Low</option>
-        </select>
-      </div>
+          <h3 className="text-xl">Fresh Recommendations</h3>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="border px-2 rounded bg-white"
+          >
+            <option value="">Sort By</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="lowToHigh">Price: Low to High</option>
+            <option value="highToLow">Price: High to Low</option>
+          </select>
+        </div>
       )}
 
       <div className="flex flex-wrap items-center justify-center gap-10">

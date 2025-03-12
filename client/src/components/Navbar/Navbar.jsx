@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../ReduxStore/Reducers/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/olx-logo.png";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaSignOutAlt } from "react-icons/fa";
 import UserProfile from "../UserProfile/UserProfile";
 import Profile from "../../assets/profile-logo.png";
 
@@ -43,38 +43,38 @@ const Navbar = () => {
         </Link>
 
         <div className="hidden md:flex justify-between items-center border border-gray-400 rounded-md bg-white w-2/5">
-        <input
-              type="search"
-              placeholder="Search products..."
-              className="outline-none border-none px-2 py-1 w-64"
-            />
-            <button className="ml-2 text-white bg-black px-3 py-3 h-full">
-              <svg
-                className="h-5 w-5"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M11 19a8 8 0 100-16 8 8 0 000 16zm10 2l-6-6"
-                ></path>
-              </svg>
-            </button>
+          <input
+            type="search"
+            placeholder="Search products..."
+            className="outline-none border-none px-2 py-1 w-64"
+          />
+          <button className="ml-2 text-white bg-black px-3 py-3 h-full">
+            <svg
+              className="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M11 19a8 8 0 100-16 8 8 0 000 16zm10 2l-6-6"
+              ></path>
+            </svg>
+          </button>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center">
-          <select className="px-3 py-2">
-  {languages.map((lang, index) => (
-    <option key={index} value={lang}>
-      {lang}
-    </option>
-  ))}
-</select>
+            <select className="px-3 py-2">
+              {languages.map((lang, index) => (
+                <option key={index} value={lang}>
+                  {lang}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="relative">
@@ -82,7 +82,11 @@ const Navbar = () => {
               id="profile-menu"
               onClick={() => setShowProfile(!showProfile)}
             >
-              <img className="h-10 w-10 rounded-full" src={Profile} alt="Profile" />
+              <img
+                className="h-10 w-10 rounded-full"
+                src={Profile}
+                alt="Profile"
+              />
             </button>
 
             {showProfile && (
@@ -91,19 +95,28 @@ const Navbar = () => {
                 <hr className="my-2" />
                 {token && (
                   <>
-                    <Link to="/wishlist" className="block px-3 py-2 hover:bg-gray-100">
-                    <FaHeart className="h-6 w-6 text-red-500" />
+                    <Link
+                      to="/wishlist"
+                      className=" px-3 py-2 hover:bg-gray-100 flex items-center gap-x-2"
+                    >
+                      <FaHeart className="h-6 w-6 text-red-500" />
+                      <span>Your Wishlist</span>
                     </Link>
+
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-x-2 w-full text-left px-3 py-2 hover:bg-gray-100"
                     >
-                      🚪 Logout
+                      <FaSignOutAlt className="h-6 w-6 text-gray-600" />
+                      <span> Logout</span>
                     </button>
                   </>
                 )}
                 {!token && (
-                  <Link to="/login" className="block px-3 py-2 hover:bg-gray-100">
+                  <Link
+                    to="/login"
+                    className="block px-3 py-2 hover:bg-gray-100"
+                  >
                     🔑 Login
                   </Link>
                 )}
@@ -112,25 +125,25 @@ const Navbar = () => {
           </div>
 
           <Link to={token ? "/post-category" : "#"}>
-          <div className="border-3 border-r border-b border-amber-500 rounded-xl">
-                    <span className="bg-white text-black px-4 py-2 rounded-xl flex items-center border-3 border-t border-l border-blue-500">
-                      <svg
-                        className="h-5 w-5 mr-1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M12 4v16m8-8H4"
-                        ></path>
-                      </svg>
-                      <span>SELL</span>
-                    </span>
-                  </div>
+            <div className="border-3 border-r border-b border-amber-500 rounded-xl">
+              <span className="bg-white text-black px-4 py-2 rounded-xl flex items-center border-3 border-t border-l border-blue-500">
+                <svg
+                  className="h-5 w-5 mr-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+                <span>SELL</span>
+              </span>
+            </div>
           </Link>
         </div>
       </nav>

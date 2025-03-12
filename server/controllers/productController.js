@@ -46,7 +46,7 @@ export const addProduct = async (req, res) => {
 
     const user = await User.findById(owner);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ success:false, message: "User not found" });
     }
 
     user.productsadd.push(postProduct._id);
@@ -54,10 +54,10 @@ export const addProduct = async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "Product added successfully!", product: postProduct });
+      .json({success:true, message: "Product added successfully!", product: postProduct });
   } catch (error) {
     console.error("Error:", error);
-    res
+    return res
       .status(500)
       .json({ message: "Failed to create product", error: error.message });
   }
