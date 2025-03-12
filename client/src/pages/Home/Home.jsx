@@ -49,7 +49,7 @@ const Home = () => {
       <Banner />
 
       {sortedProducts.length === 0 ? (
-        <p>No Items...</p>
+        <p className="py-6 text-md">Loading....</p>
       ) : (
         <div className="flex justify-between items-center w-full px-6 py-3">
           <h3 className="text-xl">Fresh Recommendations</h3>

@@ -117,25 +117,23 @@ export const wishlist = async (req, res) => {
 
 
 export const searchProducts = async (req, res) => {
+  console.log("func call")
   try {
-    const { query } = req.query.query;
-
-    if (!query || query.length < 3) {
-      return res
-        .status(400)
-        .json({ message: "Search query must be at least 3 characters" });
-    }
+    const { q } = req.query;
+    console.log(req.query,"query")
+    if (!q) return res.status(400).json({ message: "Search query is required" });
 
     const products = await Product.find({
       $or: [
-        { title: { $regex: query, $options: "i" } }, // Case-insensitive search on title
-        { category: { $regex: query, $options: "i" } }, // Case-insensitive search on category
-      ],
-    }).select("title category"); // Select only needed fields
+        { title: { $regex: q, $options: "i" } },
+        { category: { $regex: q, $options: "i" } },
+        { description: { $regex: q, $options: "i" } }
+      ]
+    });
 
     return res.json(products);
   } catch (error) {
-    console.error("Search Error:", error);
-    return res.status(500).json({ message: "Server Error" });
+    console.error("Search error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

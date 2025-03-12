@@ -7,6 +7,7 @@ import SelectCategory from "./components/Post/SelectCategory";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import OtpVerification from "./components/Verify/OtpVerification";
 import Wishlist from "../src/components/GetWishlist/Wishlist";
+import SearchResults from "../src/components/SearchResults/SearchResults";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./ReduxStore/Reducers/authSlice";
@@ -58,6 +59,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path='/search-result' element={<SearchResults/>}/>
         <Route path="/verify-otp" element={<OtpVerification />} />{" "}
         {token && <Route path="/home" element={<Home />} />}
         <Route path="/post-category" element={<SelectCategory />} />

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../ReduxStore/Reducers/authSlice";
 import axios from "axios";
+import {toast} from 'react-toastify';
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -28,6 +29,7 @@ const SignIn = () => {
       navigate("/home");
     } else {
       alert("Invalid credentials or user not found. Please try again.");
+      toast.warning("data.message")
     }
   };
 

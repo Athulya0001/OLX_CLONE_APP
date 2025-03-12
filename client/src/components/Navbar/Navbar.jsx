@@ -6,12 +6,16 @@ import Logo from "../../assets/olx-logo.png";
 import { FaHeart, FaSignOutAlt } from "react-icons/fa";
 import UserProfile from "../UserProfile/UserProfile";
 import Profile from "../../assets/profile-logo.png";
+import {setSearchResults} from '../../ReduxStore/Reducers/productSlice';
+import axios from 'axios';
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
   const { token } = useSelector((state) => state.auth);
+
   const languages = ["English", "Hindi", "Spanish", "French", "German"];
 
   const handleLogout = () => {
@@ -19,6 +23,19 @@ const Navbar = () => {
     if (isConfirmed) {
       dispatch(logout());
       navigate("/");
+    }
+  };
+  
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    try {
+      console.log("Sending search request to backend...");
+      const response = await axios.get(`http://localhost:3000/products/search?q=${searchQuery}`);
+      dispatch(setSearchResults(response.data));
+      console.log(res.data,"data")
+      navigate("/search-results");
+    } catch (error) {
+      console.error("Search error:", error)
     }
   };
 
@@ -47,9 +64,12 @@ const Navbar = () => {
             type="search"
             placeholder="Search products..."
             className="outline-none border-none px-2 py-1 w-64"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
           />
-          <button className="ml-2 text-white bg-black px-3 py-3 h-full">
-            <svg
+          <button className="ml-2 text-white bg-black px-3 py-3 h-full" onClick={handleSearch}>
+          <svg
               className="h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

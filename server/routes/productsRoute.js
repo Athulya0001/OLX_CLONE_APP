@@ -21,6 +21,5 @@ productRouter.get('/', allProducts)
 productRouter.get('/category', category)
 productRouter.get('/:id', productDetails)
 productRouter.post('/wishlist',authCheck, wishlist)
-// productRouter.get("/search", searchProducts);
-
+productRouter.get("/search", searchProducts);
 export default productRouter
