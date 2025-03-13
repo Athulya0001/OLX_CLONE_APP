@@ -12,6 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./ReduxStore/Reducers/authSlice";
 import { ToastContainer } from "react-toastify";
 import SearchResults from "./pages/SearchResults/SearchResults";
+import Profile from "./pages/Profile/Profile";
+import ProfileDetails from "./components/ProfileDetails/ProfileDetails";
+import ProfileProducts from "./components/ProfileProducts/ProfileProducts";
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -41,6 +45,9 @@ const App = () => {
 
       const data = await response.data;
       dispatch(setUser(response.data.user));
+      if(data.message==="Invalid or expired token"){
+        navigate("/")
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -65,6 +72,7 @@ const App = () => {
         <Route path="/post-category" element={<SelectCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />}/>
       </Routes>
     </div>
   );

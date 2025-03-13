@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoute.js";
 import productRouter from "./routes/productsRoute.js";
 import cookieParser from "cookie-parser";
 import searchRoutes from './routes/searchRoutes.js'
+import userRouter from "./routes/userRoute.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/products", productRouter);app.use('api/search',searchRoutes)
 app.use('/api/search',searchRoutes)
+app.use("/api/user", userRouter)
 const port = process.env.PORT || 4000;
 
 mongoConnect().then(() => {
