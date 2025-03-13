@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [request, setRequest] = useState(false);
   const [owner, setOwner] = useState(null);
   const [requestSent, setRequestSent] = useState(false);
   const {user} = useSelector((state=>state.auth))
@@ -32,13 +33,15 @@ const ProductDetails = () => {
   const fetchRequest = async (ownerEmail) => {
     try {
       const response = await axios.post('http://localhost:3000/api/auth/request', {
-        ownerEmail, userEmail,
-        message: 'I would like to request more details about the product.'
+        ownerEmail, userEmail, id,
+        message: `I would like to request more details about the product.`
       });
       const data = await response.data;
       if(data.success){
         setRequestSent(true);
+        setRequest(data.userReq);
         toast.success(data.message);
+        console.log(request,"req")
       }
       console.log(data, "data");
     } catch (error) {

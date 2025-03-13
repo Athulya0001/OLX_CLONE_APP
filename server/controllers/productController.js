@@ -46,15 +46,19 @@ export const addProduct = async (req, res) => {
 
     const user = await User.findById(owner);
     if (!user) {
-      return res.status(404).json({ success:false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     user.productsadd.push(postProduct._id);
     await user.save();
 
-    res
-      .status(201)
-      .json({success:true, message: "Product added successfully!", product: postProduct });
+    res.status(201).json({
+      success: true,
+      message: "Product added successfully!",
+      product: postProduct,
+    });
   } catch (error) {
     console.error("Error:", error);
     return res
@@ -86,14 +90,18 @@ export const wishlist = async (req, res) => {
     const userFind = await User.findById(userId);
 
     if (!userFind) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const isWishlisted = userFind.wishlist.includes(productId);
     console.log(isWishlisted, "wishlisted");
 
     if (isWishlisted) {
-      userFind.wishlist = userFind.wishlist.filter((id) => id.toString() !== productId);
+      userFind.wishlist = userFind.wishlist.filter(
+        (id) => id.toString() !== productId
+      );
       await userFind.save();
       return res.status(200).json({
         success: true,
@@ -115,14 +123,10 @@ export const wishlist = async (req, res) => {
   }
 };
 
-
 export const searchProducts = async (req, res) => {
-  console.log("func call")
+  console.log(req.query)
+  const {q} = req.query;
   try {
-    const { q } = req.query;
-    console.log(req.query,"query")
-    if (!q) return res.status(400).json({ message: "Search query is required" });
-
     const products = await Product.find({
       $or: [
         { title: { $regex: q, $options: "i" } },
@@ -130,10 +134,9 @@ export const searchProducts = async (req, res) => {
         { description: { $regex: q, $options: "i" } }
       ]
     });
-
-    return res.json(products);
+    
+    return res.status(200).json({ success: true, message: "Products found" , products: products });
   } catch (error) {
-    console.error("Search error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ success: false, message: "not found" });
   }
 };

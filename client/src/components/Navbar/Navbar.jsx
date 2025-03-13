@@ -6,8 +6,8 @@ import Logo from "../../assets/olx-logo.png";
 import { FaHeart, FaSignOutAlt } from "react-icons/fa";
 import UserProfile from "../UserProfile/UserProfile";
 import Profile from "../../assets/profile-logo.png";
-import {setSearchResults} from '../../ReduxStore/Reducers/productSlice';
-import axios from 'axios';
+import { setSearchResults } from "../../ReduxStore/Reducers/productSlice";
+import axios from "axios";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -25,19 +25,6 @@ const Navbar = () => {
       navigate("/");
     }
   };
-  
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
-    try {
-      console.log("Sending search request to backend...");
-      const response = await axios.get(`http://localhost:3000/products/search?q=${searchQuery}`);
-      dispatch(setSearchResults(response.data));
-      console.log(res.data,"data")
-      navigate("/search-results");
-    } catch (error) {
-      console.error("Search error:", error)
-    }
-  };
 
   const handleClickOutside = (event) => {
     if (!event.target.closest("#profile-menu")) {
@@ -52,24 +39,46 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleSubmitSearchTerm = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(`http://localhost:3000/api/search?q=${searchQuery}`);
+      const data =  response.data
+      if(data.success){
+        const searchProducts =  data.products;
+        dispatch(setSearchResults(searchProducts));
+        navigate("/search-result")
+      }
+
+    } catch (error) {
+      console.log("error occured", error);
+    }
+  };
   return (
-    <div className="fixed top-0 left-0 w-full bg-gray-100 shadow-md z-50">
-      <nav className="w-full max-w-7xl mx-auto p-3 flex justify-between items-center">
+    <div className="fixed flex justify-center items-center top-0 left-0 w-full bg-gray-100 shadow-md z-50">
+      <nav className="w-full max-w-8xl mx-30 p-3 flex justify-between items-center">
         <Link to="/">
           <img src={Logo} alt="Logo" className="h-10" />
         </Link>
 
-        <div className="hidden md:flex justify-between items-center border border-gray-400 rounded-md bg-white w-2/5">
+        <form
+          className="hidden md:flex justify-between items-center border border-gray-400 rounded-md bg-white w-2/5"
+          onSubmit={handleSubmitSearchTerm}
+        >
           <input
-            type="search"
+            type="text"
             placeholder="Search products..."
-            className="outline-none border-none px-2 py-1 w-64"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+            className="outline-none border-none px-2 py-1 w-full"
+            name="search"
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
           />
-          <button className="ml-2 text-white bg-black px-3 py-3 h-full" onClick={handleSearch}>
-          <svg
+          <button
+            type="submit"
+            className="ml-2 text-white bg-black px-3 py-3 h-full"
+          >
+            <svg
               className="h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -84,7 +93,7 @@ const Navbar = () => {
               ></path>
             </svg>
           </button>
-        </div>
+        </form>
 
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center">

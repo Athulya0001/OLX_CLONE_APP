@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import Product from '../models/productModel.js';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -123,10 +124,16 @@ export const getUser = async (req, res) => {
 };
 
 export const request = async (req, res) => {
-  console.log('fn call')
-  const { ownerEmail, message, userEmail } = req.body;
+  const { ownerEmail, message, userEmail, id } = req.body;
+  console.log(userEmail,"email user")
 
   try {
+    const user = await User.findOne({userEmail});
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    const product = await Product.findById(id);
+    console.log(product,"pro req")
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -144,7 +151,9 @@ export const request = async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-    return res.status(200).json({ success: true, message: "Requested details sent" });
+    user.request = true;
+    await user.save();
+    return res.status(200).json({ success: true, message: "Requested details sent", userReq: user.request, productId: id});
 
   } catch (error) {
     console.error("Nodemailer Error:", error);

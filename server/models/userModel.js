@@ -40,7 +40,11 @@ const UserSchema = new mongoose.Schema({
   wishlist: [{ 
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Product" 
-  }]
+  }],
+  request: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const User = mongoose.model("User", UserSchema);

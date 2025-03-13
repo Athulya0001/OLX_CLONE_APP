@@ -7,11 +7,11 @@ import SelectCategory from "./components/Post/SelectCategory";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import OtpVerification from "./components/Verify/OtpVerification";
 import Wishlist from "../src/components/GetWishlist/Wishlist";
-import SearchResults from "../src/components/SearchResults/SearchResults";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./ReduxStore/Reducers/authSlice";
 import { ToastContainer } from "react-toastify";
+import SearchResults from "./pages/SearchResults/SearchResults";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -46,7 +46,7 @@ const App = () => {
     }
   };
   return (
-    <div>
+    <div className="mx-30">
       <ToastContainer
         position="top-right"
         autoClose={3000} // Closes after 3 seconds
