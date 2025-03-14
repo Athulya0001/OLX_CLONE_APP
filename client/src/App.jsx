@@ -13,14 +13,11 @@ import { setUser } from "./ReduxStore/Reducers/authSlice";
 import { ToastContainer } from "react-toastify";
 import SearchResults from "./pages/SearchResults/SearchResults";
 import Profile from "./pages/Profile/Profile";
-import ProfileDetails from "./components/ProfileDetails/ProfileDetails";
-import ProfileProducts from "./components/ProfileProducts/ProfileProducts";
-
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (!token) {
@@ -33,7 +30,7 @@ const App = () => {
     } else {
       fetchUserData();
     }
-  }, [navigate, token]);
+  }, [navigate, dispatch]);
 
   const fetchUserData = async () => {
     try {
@@ -43,10 +40,11 @@ const App = () => {
         },
       });
 
-      const data = await response.data;
+      const data = response.data;
+      console.log(response.data);
       dispatch(setUser(response.data.user));
-      if(data.message==="Invalid or expired token"){
-        navigate("/")
+      if (data.message === "Invalid or expired token") {
+        navigate("/");
       }
     } catch (error) {
       console.log(error.message);
@@ -64,15 +62,16 @@ const App = () => {
         theme="light"
       />
       <Routes>
-        <Route path="/" element={<Signin />} />
+        <Route path="/" element={user ? <Home /> : <Signin />} />
+        {/* <Route path="/" element={<Signin />} /> */}
         <Route path="/signup" element={<Signup />} />
-        <Route path='/search-result' element={<SearchResults/>}/>
+        <Route path="/search-result" element={<SearchResults />} />
         <Route path="/verify-otp" element={<OtpVerification />} />{" "}
-        {token && <Route path="/home" element={<Home />} />}
+        {/* {token && <Route path="/home" element={<Home />} />} */}
         <Route path="/post-category" element={<SelectCategory />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/profile" element={<Profile />}/>
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
   );

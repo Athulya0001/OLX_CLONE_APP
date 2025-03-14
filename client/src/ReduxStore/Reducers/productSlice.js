@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const productSlice = createSlice({
   name: "products",
   initialState: {
-    items: [],  
+    items: [],
     products: [],
     searchResults: [],
   },
@@ -13,8 +13,9 @@ const productSlice = createSlice({
       state.products.push(action.payload._id);
     },
     allProducts: (state, action) => {
-      state.items = action.payload.products; 
-      state.products = action.payload.products.map((product) => product._id); 
+      state.items = action.payload;
+      console.log(state.items, "============================================");
+      state.products = action.payload.map((product) => product._id);
     },
     setSearchResults: (state, action) => {
       state.searchResults = action.payload;
@@ -22,7 +23,8 @@ const productSlice = createSlice({
   },
 });
 
-export const { addProduct, allProducts, setSearchResults } = productSlice.actions;
+export const { addProduct, allProducts, setSearchResults } =
+  productSlice.actions;
 export const selectProducts = (state) => state.products.items;
 
 export default productSlice.reducer;

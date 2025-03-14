@@ -1,28 +1,33 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar/Navbar";
-import CategoryMenu from "../../components/Category/Category";
 import Cards from "../../components/Cards/Cards";
 import Footer from "../../components/Footer/Footer";
 import Banner from "../../components/Banner/Banner";
 import { useDispatch, useSelector } from "react-redux";
 import { allProducts } from "../../ReduxStore/Reducers/productSlice";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.product || { items: [] });
   const [sortOption, setSortOption] = useState("");
   const { user } = useSelector((state) => state.auth);
+  console.log(user);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/products")
-      .then((res) => {
-        dispatch(allProducts({ products: res.data }));
-      })
-      .catch((err) => console.error("Error fetching products:", err));
-  }, [dispatch]);
-
+    fetchProducts();
+  }, []);
+  async function fetchProducts() {
+    try {
+      const response = await axios.get("http://localhost:3000/products");
+      console.log(response);
+      dispatch(allProducts(response.data));
+    } catch (error) {
+      console.log("error occured", error);
+    }
+  }
   const filteredProducts = items.filter(
     (product) => product.owner !== user?._id
   );
@@ -45,7 +50,6 @@ const Home = () => {
   return (
     <div className="flex flex-col justify-center items-center min-h-[80vh]">
       <Navbar />
-      <CategoryMenu />
       <Banner />
 
       {sortedProducts.length === 0 ? (

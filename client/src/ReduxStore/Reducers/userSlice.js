@@ -22,21 +22,25 @@ export const deleteProduct = createAsyncThunk("user/deleteProduct", async (produ
 const userSlice = createSlice({
   name: "user",
   initialState: { user: null, status: "idle" },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
-      })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
-        state.user = action.payload;
-      })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
-        state.user.productsadd = state.user.productsadd.filter(
-          (product) => product._id !== action.payload
-        );
-      });
+  reducers: {
+    
   },
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(fetchUserProfile.fulfilled, (state, action) => {
+  //       console.log(action.payload,"fech user")
+  //       state.user = action.payload;
+  //     })
+  //     .addCase(updateUserProfile.fulfilled, (state, action) => {
+  //       console.log(action.payload,"update")
+  //       state.user = action.payload;
+  //     })
+  //     .addCase(deleteProduct.fulfilled, (state, action) => {
+  //       state.user.productsadd = state.user.productsadd.filter(
+  //         (product) => product._id !== action.payload
+  //       );
+  //     });
+  // },
 });
 
 export default userSlice.reducer;

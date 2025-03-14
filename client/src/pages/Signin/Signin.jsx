@@ -26,7 +26,6 @@ const SignIn = () => {
         return;
       }
       dispatch(login({ user: data.user, token: data.token }));
-      navigate("/home");
     } else {
       alert("Invalid credentials or user not found. Please try again.");
       toast.warning("data.message")

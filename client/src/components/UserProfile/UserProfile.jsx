@@ -13,7 +13,7 @@ const UserProfile = () => {
         <span className="text-xl">{user.username}</span>
       </div>
       <div className="py-2 w-full">
-        <Link to="/profile/details">
+        <Link to="/profile">
           <button className="w-full py-1 px-1 bg-[#002f34] text-white font-bold rounded-sm hover:bg-white hover:text-[#002f34] hover:border-2 hover:border-[#002f34] transition-all">
             View Profile
           </button>
