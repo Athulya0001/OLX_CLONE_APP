@@ -24,6 +24,7 @@ export const updateProfile = async (req, res) => {
 
 // delete product from user
 export const deleteProduct = async (req, res) => {
+  console.log("func")
     try {
       const { productId } = req.params;
       

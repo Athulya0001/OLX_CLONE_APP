@@ -21,24 +21,25 @@ export const category = async (req, res) => {
   }
 };
 
+// add products
 export const addProduct = async (req, res) => {
   console.log("Received Body:", req.body);
-  console.log("Received File:", req.file);
+  console.log("Received Files:", req.files);
+
   const { title, category, price, description, owner } = req.body;
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No image uploaded" });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No images uploaded" });
     }
 
-    const imagePath = `/uploads/${req.file.filename}`;
-    console.log("Image Path:", imagePath);
+    const imagePaths = req.files.map((file) => `/uploads/${file.filename}`);
 
     const postProduct = new Product({
       title,
       category,
       price,
       description,
-      images: [imagePath],
+      images: imagePaths,
       owner,
     });
 
@@ -63,7 +64,7 @@ export const addProduct = async (req, res) => {
     console.error("Error:", error);
     return res
       .status(500)
-      .json({ message: "Failed to create product", error: error.message });
+      .json({ success:false, message: "Failed to create product", error: error.message });
   }
 };
 

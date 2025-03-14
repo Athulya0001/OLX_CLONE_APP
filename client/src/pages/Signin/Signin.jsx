@@ -3,34 +3,54 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../ReduxStore/Reducers/authSlice";
 import axios from "axios";
-import {toast} from 'react-toastify';
+import {toast} from 'react-toastify'
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("")
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post("http://localhost:3000/api/auth/signin", {
-      email,
-      password,
-    });
-    const data = await response.data;
-
-    if (data.success) {
-      if (data.user.verified === false) {
-        alert("Your email is not verified. Please check your email.");
-
-        return;
+  
+    try {
+      const response = await axios.post("http://localhost:3000/api/auth/signin", {
+        email,
+        password,
+      });
+  
+      const data = response.data;
+      console.log(data, "data======");
+  
+      if (data.success) {
+        if (data.user.verified === false) {
+          toast.warning("Your email is not verified. Please check your inbox.");
+          return;
+        }
+  
+        dispatch(login({ user: data.user, token: data.token }));
+        toast.success("Login successful! Welcome back.");
       }
-      dispatch(login({ user: data.user, token: data.token }));
-    } else {
-      alert("Invalid credentials or user not found. Please try again.");
-      toast.warning("data.message")
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error.response) {
+        const { message, error: errorType } = error.response.data;
+  
+        if (errorType === "invalid_email") {
+          toast.error("User not found. Please check your email.");
+        } else if (errorType === "invalid_password") {
+          toast.error("Incorrect password. Please try again.");
+        } else {
+          toast.error(message || "Something went wrong. Please try again.");
+        }
+      } else {
+        toast.error("Network error. Please try again.");
+      }
     }
   };
+  
 
   return (
     <div className="bg-gray-100 flex items-center justify-center h-screen">

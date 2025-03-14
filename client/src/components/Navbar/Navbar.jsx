@@ -8,22 +8,59 @@ import UserProfile from "../UserProfile/UserProfile";
 import Profile from "../../assets/profile-logo.png";
 import { setSearchResults } from "../../ReduxStore/Reducers/productSlice";
 import axios from "axios";
+import {toast} from 'react-toastify'
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const [showProfile, setShowProfile] = useState(false);
   const { token } = useSelector((state) => state.auth);
 
   const languages = ["English", "Hindi", "Spanish", "French", "German"];
 
   const handleLogout = () => {
-    const isConfirmed = window.confirm("Are you sure you want to Logout?");
-    if (isConfirmed) {
-      dispatch(logout());
-      navigate("/");
-    }
+    toast.info(
+      <div className="flex flex-col space-y-2">
+        <p className="text-lg">Are you sure you want to Logout?</p>
+        <div className="flex justify-end space-x-2">
+          <button
+            className="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+            onClick={() => {
+              dispatch(logout());
+              navigate("/");
+              toast.dismiss();
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="px-4 py-1 bg-gray-300 rounded hover:bg-gray-400"
+            onClick={() => toast.dismiss()}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+        toastStyle: {
+          border: "2px solid #002f34",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+          borderRadius: "8px",
+          padding: "12px 16px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          color: "#fff",
+          background: "#333",
+        },
+      }
+    );
+    
   };
 
   const handleClickOutside = (event) => {
@@ -57,7 +94,7 @@ const Navbar = () => {
   return (
     <div className="fixed flex justify-center items-center top-0 left-0 w-full bg-gray-100 shadow-md z-50">
       <nav className="w-full max-w-8xl mx-30 p-3 flex justify-between items-center">
-        <Link to="/home">
+        <Link to="/">
           <img src={Logo} alt="Logo" className="h-10" />
         </Link>
 

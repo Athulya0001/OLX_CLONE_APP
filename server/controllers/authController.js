@@ -9,12 +9,10 @@ dotenv.config();
 
 export const registerUser = async (req, res) => {
   const { username, email, password, phone } = req.body;
-  console.log(req.body);
 
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log(existingUser, "auth");
       return res
         .status(400)
         .json({ success: false, message: "User already exists" });
@@ -58,7 +56,6 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
 
   if (!email || !password) {
     return res.status(400).json({
@@ -97,7 +94,7 @@ export const loginUser = async (req, res) => {
       user: user,
     });
   } catch (error) {
-    console.error("Login error:", error);
+    // console.error("Login error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -124,16 +121,30 @@ export const getUser = async (req, res) => {
 };
 
 export const request = async (req, res) => {
-  const { ownerEmail, message, userEmail, id } = req.body;
-  console.log(userEmail,"email user")
+  const { ownerId, message, userEmail, id } = req.body;
+  console.log(req.body,"=====")
 
   try {
-    const user = await User.findOne({userEmail});
+    const user = await User.findOne({ email: userEmail }); 
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
+
     const product = await Product.findById(id);
-    console.log(product,"pro req")
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    const owner = await User.findById(product.owner);
+    console.log(owner,"owner===============")
+    if (!owner) {
+      return res.status(404).json({ success: false, message: "Product owner not found" });
+    }
+
+    if (user.requestedProducts.includes(id)) {
+      return res.status(400).json({ success: false, message: "You have already requested details for this product." });
+    }
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -144,22 +155,43 @@ export const request = async (req, res) => {
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: ownerEmail,
-      subject: "Request for Details",
-      html: `<p><b>Message:</b> ${message}</p><p><b>From:</b> ${userEmail}</p>`,
+      to: owner.email,
+      subject: "Request for Product Details",
+      html: `
+        <h2>Product Request</h2>
+        <p><strong>Product ID:</strong> ${product._id}</p>
+        <p><strong>Product Title:</strong> ${product.title}</p>
+        <p><strong>Message:</strong> ${message}</p>
+        <p><strong>From:</strong> ${userEmail}</p>
+      `,
       replyTo: userEmail,
     };
 
     await transporter.sendMail(mailOptions);
-    user.request = true;
+
+    user.requestedProducts.push(id);
     await user.save();
-    return res.status(200).json({ success: true, message: "Requested details sent", userReq: user.request, productId: id});
+
+    return res.status(200).json({ success: true, message: "Request sent successfully", productId: id });
 
   } catch (error) {
-    console.error("Nodemailer Error:", error);
-    return res.status(500).json({ success: false, message: "Error sending mail" });
+    return res.status(500).json({ success: false, message: "Error sending request", error: error.message });
   }
 };
+
+// export const checkRequestStatus = async (req, res) => {
+//   console.log("func")
+//   try {
+//     const {id} = req.user;
+//     const user = await User.findById(id)
+//     if (!user) {
+//       return res.status(404).json({ success: false, message: "User not found" });
+//     }
+//     return res.json({ success: true, requestedProducts: user.requestedProducts || [] });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, message: "Server error", error: error.message });
+//   }
+// }
 
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;

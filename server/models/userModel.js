@@ -18,6 +18,13 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  address: {
+    type: String,
+  },
+  place:{type: String},
+  district: {type: String},
+  state: {type: String},
+  pincode: {type: String},
   profileimg: { 
     type: String 
   },
@@ -41,10 +48,7 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Product" 
   }],
-  request: {
-    type: Boolean,
-    default: false,
-  },
+  requestedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 
 const User = mongoose.model("User", UserSchema);
