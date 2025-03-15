@@ -64,7 +64,11 @@ export const addProduct = async (req, res) => {
     console.error("Error:", error);
     return res
       .status(500)
-      .json({ success:false, message: "Failed to create product", error: error.message });
+      .json({
+        success: false,
+        message: "Failed to create product",
+        error: error.message,
+      });
   }
 };
 
@@ -125,18 +129,20 @@ export const wishlist = async (req, res) => {
 };
 
 export const searchProducts = async (req, res) => {
-  console.log(req.query)
-  const {q} = req.query;
+  console.log(req.query);
+  const { q } = req.query;
   try {
     const products = await Product.find({
       $or: [
         { title: { $regex: q, $options: "i" } },
         { category: { $regex: q, $options: "i" } },
-        { description: { $regex: q, $options: "i" } }
-      ]
+        { description: { $regex: q, $options: "i" } },
+      ],
     });
-    
-    return res.status(200).json({ success: true, message: "Products found" , products: products });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Products found", products: products });
   } catch (error) {
     return res.status(500).json({ success: false, message: "not found" });
   }

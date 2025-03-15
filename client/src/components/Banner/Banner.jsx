@@ -8,7 +8,6 @@ import Banner2 from "..//../assets/banner2.jpeg";
 import Banner3 from "..//../assets/banner3.jpeg";
 import Banner4 from "..//../assets/banner4.png";
 
-
 const images = [Banner1, Banner2, Banner3, Banner4];
 
 const Banner = () => {

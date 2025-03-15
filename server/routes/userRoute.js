@@ -1,6 +1,10 @@
 import express from "express";
 import { authCheck } from "../middleware/authCheck.js";
-import { deleteProduct, updateProfile, userProfile } from "../controllers/userController.js";
+import {
+  deleteProduct,
+  updateProfile,
+  userProfile,
+} from "../controllers/userController.js";
 
 const userRouter = express.Router();
 

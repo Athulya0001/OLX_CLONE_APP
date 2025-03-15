@@ -1,10 +1,8 @@
-import express from 'express'
-import { searchProducts } from '../controllers/productController.js'
+import express from "express";
+import { searchProducts } from "../controllers/productController.js";
 
-const router=express.Router()
+const router = express.Router();
 
+router.get("/", searchProducts);
 
-router.get('/',searchProducts)
-
-
-export default router
+export default router;

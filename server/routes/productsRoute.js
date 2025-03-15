@@ -8,7 +8,7 @@ import {
 } from "../controllers/productController.js";
 import multer from "multer";
 import { authCheck } from "../middleware/authCheck.js";
-import upload from '../middleware/multerConfiguration.js'
+import upload from "../middleware/multerConfiguration.js";
 
 const productRouter = express.Router();
 

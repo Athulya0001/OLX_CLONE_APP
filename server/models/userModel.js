@@ -3,51 +3,55 @@ import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   phone: {
     type: String,
-    required: true
+    required: true,
   },
   address: {
     type: String,
   },
-  place:{type: String},
-  district: {type: String},
-  state: {type: String},
-  pincode: {type: String},
-  profileimg: { 
-    type: String 
+  place: { type: String },
+  district: { type: String },
+  state: { type: String },
+  pincode: { type: String },
+  profileimg: {
+    type: String,
   },
   verified: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  otp: { 
-    type: String, 
-    default: null 
+  otp: {
+    type: String,
+    default: null,
   },
-  otpExpires: { 
-    type: Date, 
-    default: null 
+  otpExpires: {
+    type: Date,
+    default: null,
   },
-  productsadd: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Product" 
-  }],
-  wishlist: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "Product" 
-  }],
+  productsadd: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
+  wishlist: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
   requestedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 

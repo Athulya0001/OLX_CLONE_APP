@@ -33,11 +33,12 @@ const authSlice = createSlice({
       if (state.user) {
         state.user = { ...state.user, wishlist: action.payload };
       }
-    },    
+    },
   },
 });
 
-export const { registerUser, login, logout,setUser,setWishlist } = authSlice.actions;
+export const { registerUser, login, logout, setUser, setWishlist } =
+  authSlice.actions;
 export const selectUser = (state) => state.auth.user;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 

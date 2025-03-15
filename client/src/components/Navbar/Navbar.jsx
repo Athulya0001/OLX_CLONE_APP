@@ -8,7 +8,7 @@ import UserProfile from "../UserProfile/UserProfile";
 import Profile from "../../assets/profile-logo.png";
 import { setSearchResults } from "../../ReduxStore/Reducers/productSlice";
 import axios from "axios";
-import {toast} from 'react-toastify'
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -60,7 +60,6 @@ const Navbar = () => {
         },
       }
     );
-    
   };
 
   const handleClickOutside = (event) => {
@@ -79,14 +78,15 @@ const Navbar = () => {
   const handleSubmitSearchTerm = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`http://localhost:3000/api/search?q=${searchQuery}`);
-      const data =  response.data
-      if(data.success){
-        const searchProducts =  data.products;
+      const response = await axios.get(
+        `http://localhost:3000/api/search?q=${searchQuery}`
+      );
+      const data = response.data;
+      if (data.success) {
+        const searchProducts = data.products;
         dispatch(setSearchResults(searchProducts));
-        navigate("/search-result")
+        navigate("/search-result");
       }
-
     } catch (error) {
       console.log("error occured", error);
     }

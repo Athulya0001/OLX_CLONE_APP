@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { setWishlist } from "../../ReduxStore/Reducers/authSlice";
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
+
 
 const Cards = ({ product }) => {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const Cards = ({ product }) => {
           ? wishlist.filter((id) => id !== product._id)
           : [...wishlist, product._id];
 
-        dispatch(setWishlist(updatedWishlist)); 
+        dispatch(setWishlist(updatedWishlist));
       }
     } catch (error) {
       console.error("Error updating wishlist:", error);

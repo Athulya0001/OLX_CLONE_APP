@@ -1,15 +1,11 @@
-import React from 'react'
+import React from "react";
 import { useNavigate } from "react-router-dom";
-
 
 const GetWishlist = ({ product }) => {
   const navigate = useNavigate();
-  console.log("Product Image URL:", product.images?.[0]);
-
 
   return (
     <div className="flex items-center gap-6 bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 w-full sm:w-[400px] md:w-[500px] p-5 cursor-pointer">
-      
       <div
         className="w-28 h-28 flex justify-center items-center overflow-hidden bg-gray-200 rounded-lg"
         onClick={() => navigate(`/product/${product._id}`)}

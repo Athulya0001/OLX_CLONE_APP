@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import Profile from "../../assets/profile-logo.png";
 import { Link } from "react-router-dom";
 
-
 const UserProfile = () => {
   const { user } = useSelector((state) => state.auth);
   return (

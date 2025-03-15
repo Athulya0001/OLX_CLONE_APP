@@ -1,12 +1,13 @@
 import User from "../models/userModel.js";
-import Product from '../models/productModel.js';
+import Product from "../models/productModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
+// signup
 export const registerUser = async (req, res) => {
   const { username, email, password, phone } = req.body;
 
@@ -19,41 +20,43 @@ export const registerUser = async (req, res) => {
     }
 
     const otp = crypto.randomInt(100000, 999999).toString();
-     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     const hashedPassword = await bcrypt.hash(password, 10);
- 
+
     await User.create({
-       username,
-       email,
-       password: hashedPassword,
-       phone,
-       otp,
-       otpExpires,
-       verified: false,
-     });
- 
-     const transporter = nodemailer.createTransport({
-       service: "Gmail",
-       auth: {
-         user: process.env.EMAIL_USER,
-         pass: process.env.EMAIL_PASS,
-       },
-     });
- 
- 
-     await transporter.sendMail({
-       from: process.env.EMAIL_USER,
-       to: email,
-       subject: "Your OTP Code",
-       html: `<p>Your OTP code is <b>${otp}</b>. It will expire in 10 minutes.</p>`,
-     });
-     return res.status(200).json({ success: true, message: "OTP sent to your email" });
-    }catch (error) {
+      username,
+      email,
+      password: hashedPassword,
+      phone,
+      otp,
+      otpExpires,
+      verified: false,
+    });
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Your OTP Code",
+      html: `<p>Your OTP code is <b>${otp}</b>. It will expire in 10 minutes.</p>`,
+    });
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP sent to your email" });
+  } catch (error) {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
+// signin
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -103,6 +106,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// get user details
 export const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -120,29 +124,41 @@ export const getUser = async (req, res) => {
   }
 };
 
+// request product details
 export const request = async (req, res) => {
   const { ownerId, message, userEmail, id } = req.body;
-  console.log(req.body,"=====")
+  console.log(req.body, "=====");
 
   try {
-    const user = await User.findOne({ email: userEmail }); 
+    const user = await User.findOne({ email: userEmail });
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const product = await Product.findById(id);
     if (!product) {
-      return res.status(404).json({ success: false, message: "Product not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     const owner = await User.findById(product.owner);
-    console.log(owner,"owner===============")
+    console.log(owner, "owner===============");
     if (!owner) {
-      return res.status(404).json({ success: false, message: "Product owner not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product owner not found" });
     }
 
     if (user.requestedProducts.includes(id)) {
-      return res.status(400).json({ success: false, message: "You have already requested details for this product." });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "You have already requested details for this product.",
+        });
     }
 
     const transporter = nodemailer.createTransport({
@@ -172,27 +188,46 @@ export const request = async (req, res) => {
     user.requestedProducts.push(id);
     await user.save();
 
-    return res.status(200).json({ success: true, message: "Request sent successfully", productId: id });
-
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Request sent successfully",
+        productId: id,
+      });
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Error sending request", error: error.message });
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error sending request",
+        error: error.message,
+      });
   }
 };
 
-// export const checkRequestStatus = async (req, res) => {
-//   console.log("func")
-//   try {
-//     const {id} = req.user;
-//     const user = await User.findById(id)
-//     if (!user) {
-//       return res.status(404).json({ success: false, message: "User not found" });
-//     }
-//     return res.json({ success: true, requestedProducts: user.requestedProducts || [] });
-//   } catch (error) {
-//     return res.status(500).json({ success: false, message: "Server error", error: error.message });
-//   }
-// }
+// check request status
+export const checkRequestStatus = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    return res.json({
+      success: true,
+      requestedProducts: user.requestedProducts || [],
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
+  }
+};
 
+// verify otp for authentication
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -224,13 +259,11 @@ export const verifyOtp = async (req, res) => {
     user.otpExpires = null;
     await user.save();
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "OTP verified. Registration complete!",
-        user: user,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified. Registration complete!",
+      user: user,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: "Server error" });

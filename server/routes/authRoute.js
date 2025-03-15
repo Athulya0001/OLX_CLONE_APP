@@ -4,7 +4,7 @@ import {
   loginUser,
   verifyOtp,
   request,
-  // checkRequestStatus,
+  checkRequestStatus,
   getUser,
 } from "../controllers/authController.js";
 import { authCheck } from "../middleware/authCheck.js";
@@ -15,7 +15,7 @@ authRouter.post("/signup", registerUser);
 authRouter.post("/verify-otp", verifyOtp);
 authRouter.post("/signin", loginUser);
 authRouter.post("/request", request);
-// authRouter.get("/api/auth/user", authCheck ,checkRequestStatus)
+authRouter.get("/user", authCheck, checkRequestStatus);
 authRouter.get("/", authCheck, getUser);
 
 export default authRouter;
