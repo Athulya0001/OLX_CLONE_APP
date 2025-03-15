@@ -12,7 +12,7 @@ const GetWishlist = ({ product }) => {
       >
         {product.images?.length > 0 ? (
           <img
-            src={`http://localhost:3000${product.images[0]}`}
+            src={`https://olx-clone-backend-5jjd.onrender.com${product.images[0]}`}
             alt={product.title || "Product"}
             className="w-full h-full object-cover"
           />

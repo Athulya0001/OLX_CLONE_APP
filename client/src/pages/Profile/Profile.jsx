@@ -36,7 +36,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        "http://localhost:3000/api/user/profile",
+        "https://olx-clone-backend-5jjd.onrender.com/api/user/profile",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -64,7 +64,7 @@ const Profile = () => {
   // fetching products
   async function fetchProducts() {
     try {
-      const response = await axios.get("http://localhost:3000/products");
+      const response = await axios.get("https://olx-clone-backend-5jjd.onrender.com/products");
       console.log(response);
       dispatch(allProducts(response.data));
     } catch (error) {
@@ -76,7 +76,7 @@ const Profile = () => {
   const handleDeleteProduct = async (productId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/user/delete-product/${productId}`,
+        `https://olx-clone-backend-5jjd.onrender.com/api/user/delete-product/${productId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -150,7 +150,7 @@ const Profile = () => {
                     className="border p-2 rounded-md shadow-md"
                   >
                     <img
-                      src={`http://localhost:3000${product.images[0]}`}
+                      src={`https://olx-clone-backend-5jjd.onrender.com${product.images[0]}`}
                       alt={product.title}
                       className="w-full h-32 object-cover rounded-md"
                     />

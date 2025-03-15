@@ -18,7 +18,7 @@ const OtpVerification = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/api/auth/verify-otp",
+        "https://olx-clone-backend-5jjd.onrender.com/api/auth/verify-otp",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

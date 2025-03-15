@@ -18,7 +18,7 @@ const Cards = ({ product }) => {
   const handleWishlist = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/products/wishlist",
+        "https://olx-clone-backend-5jjd.onrender.com/products/wishlist",
         { productId: product._id },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +54,7 @@ const Cards = ({ product }) => {
       >
         {product.images?.length > 0 ? (
           <img
-            src={`http://localhost:3000${product.images[0]}`}
+            src={`https://olx-clone-backend-5jjd.onrender.com${product.images[0]}`}
             alt="Product"
             className="w-auto h-full object-cover transition-transform duration-300 ease-in-out hover:scale-105"
           />

@@ -79,7 +79,7 @@ const Navbar = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/search?q=${searchQuery}`
+        `https://olx-clone-backend-5jjd.onrender.com/api/search?q=${searchQuery}`
       );
       const data = response.data;
       if (data.success) {

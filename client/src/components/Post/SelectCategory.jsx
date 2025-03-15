@@ -17,7 +17,7 @@ const SelectCategory = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/products/category")
+      .get("https://olx-clone-backend-5jjd.onrender.com/products/category")
       .then((response) => {
         setCategories(response.data);
       })
@@ -54,7 +54,7 @@ const SelectCategory = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/products/newpost",
+        "https://olx-clone-backend-5jjd.onrender.com/products/newpost",
         formData,
         {
           headers: {

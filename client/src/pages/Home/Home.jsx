@@ -21,7 +21,7 @@ const Home = () => {
   }, []);
   async function fetchProducts() {
     try {
-      const response = await axios.get("http://localhost:3000/products");
+      const response = await axios.get("https://olx-clone-backend-5jjd.onrender.com/products");
       console.log(response);
       dispatch(allProducts(response.data));
     } catch (error) {

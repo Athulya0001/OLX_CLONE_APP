@@ -25,7 +25,7 @@ const SignUp = () => {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/signup", {
+      const response = await fetch("https://olx-clone-backend-5jjd.onrender.com/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -36,8 +36,6 @@ const SignUp = () => {
 
       if (data.success) {
         setMessage("OTP Send to your email. Please Verify...");
-        // localStorage.setItem("token", JSON.stringify(data.token || ""));
-        // dispatch(registerUser({ username: formData.username, email: formData.email,phone: formData.phone, isVerified: false }));
         navigate("/verify-otp", { state: formData });
       } else {
         setMessage(data.message);

@@ -21,7 +21,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/products/${id}`
+          `https://olx-clone-backend-5jjd.onrender.com/products/${id}`
         );
         setProduct(response.data.product);
         console.log(product, "product");
@@ -35,7 +35,7 @@ const ProductDetails = () => {
       if (user) {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/auth/user",
+            "https://olx-clone-backend-5jjd.onrender.com/api/auth/user",
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -55,7 +55,7 @@ const ProductDetails = () => {
   const fetchRequest = async (ownerId) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/request",
+        "https://olx-clone-backend-5jjd.onrender.com/api/auth/request",
         {
           ownerId,
           userEmail: user?.email,
@@ -112,7 +112,7 @@ const ProductDetails = () => {
               }`}
             />
             <img
-              src={`http://localhost:3000${mainImage}`}
+              src={`https://olx-clone-backend-5jjd.onrender.com${mainImage}`}
               alt={product.title}
               className="w-full h-96 object-cover rounded-lg shadow-md"
             />
@@ -121,7 +121,7 @@ const ProductDetails = () => {
               {product.images.map((img, index) => (
                 <img
                   key={index}
-                  src={`http://localhost:3000${img}`}
+                  src={`https://olx-clone-backend-5jjd.onrender.com${img}`}
                   alt={`Thumbnail ${index + 1}`}
                   className={`w-16 h-16 object-cover border-2 rounded cursor-pointer ${
                     mainImage === img ? "border-[#002f34]" : "border-gray-300"
