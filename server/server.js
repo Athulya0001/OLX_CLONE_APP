@@ -17,14 +17,10 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const corsOptions = {
-  origin: ["http://localhost:5173" || "https://olx-clone-frontend-l96b.onrender.com"],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'https://olx-clone-frontend-l96b.onrender.com', 
+  methods: 'GET,POST,PUT,DELETE',
+}));
 
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
