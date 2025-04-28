@@ -13,7 +13,7 @@ export const userProfile = async (req, res) => {
   }
 };
 
-// update profile
+// Update profile handler
 export const updateProfile = async (req, res) => {
   try {
     const { username, phone } = req.body;
@@ -22,33 +22,27 @@ export const updateProfile = async (req, res) => {
       { username, phone },
       { new: true }
     );
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Updated user details",
-        updatedUser: updatedUser,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Updated user details",
+      updatedUser: updatedUser,
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
-// delete product from user
+// Delete product handler
 export const deleteProduct = async (req, res) => {
-  console.log("func");
   try {
-    const { productId } = req.params;
-
+    const { productId } = req.body;
     await User.findByIdAndUpdate(req.user.id, {
       $pull: { productsadd: productId },
     });
 
     await Product.findByIdAndDelete(productId);
 
-    return res
-      .status(200)
-      .json({ success: true, message: "Product deleted successfully" });
+    return res.status(200).json({ success: true, message: "Product deleted successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server Error" });
   }

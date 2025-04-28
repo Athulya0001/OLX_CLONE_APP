@@ -17,7 +17,7 @@ const ProductDetails = () => {
 
   const wishlist = useMemo(() => user?.wishlist || [], [user?.wishlist]);
   const isWishlisted = wishlist.includes(id);
-  console.log(wishlist,"wishlist")
+  console.log(wishlist, "wishlist");
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -75,32 +75,15 @@ const ProductDetails = () => {
     }
   };
 
-  if (!product) return <div><Loading/></div>;
+  if (!product)
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <header className="bg-white shadow-md sticky top-0 z-50 p-3">
-        <Link to="/">
-          <button className="flex items-center space-x-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 50 50"
-              className="text-gray-600"
-            >
-              <path
-                d="M30 15 L20 25 L30 35"
-                stroke="black"
-                strokeWidth="4"
-                fill="none"
-              />
-            </svg>
-            <span className="text-lg font-medium text-gray-600">Back</span>
-          </button>
-        </Link>
-      </header>
-
       <div className="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
         <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
 

@@ -1,16 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { setUser } from "../../ReduxStore/Reducers/authSlice";
-import { useNavigate } from "react-router-dom";
 import { allProducts } from "../../ReduxStore/Reducers/productSlice";
 import Navbar from "../../components/Navbar/Navbar";
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { user, token } = useSelector((state) => state.auth);
-
   const { items } = useSelector((state) => state.product);
 
   const [userProducts, setUserProducts] = useState([]);
@@ -26,19 +23,19 @@ const Profile = () => {
       );
       setUserProducts(productDetails);
     }
-  }, []);
+  }, [user, items]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         "https://olx-clone-backend-5jjd.onrender.com/api/user/profile",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      dispatch(setUser(response.data));
+      dispatch(setUser(response.data.updatedUser));
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -58,26 +55,24 @@ const Profile = () => {
   async function fetchProducts() {
     try {
       const response = await axios.get("https://olx-clone-backend-5jjd.onrender.com/products");
-      console.log(response);
       dispatch(allProducts(response.data));
     } catch (error) {
-      console.log("error occured", error);
+      console.log("Error fetching products", error);
     }
   }
 
   const handleDeleteProduct = async (productId) => {
     try {
-      const response = await axios.delete(
-        `https://olx-clone-backend-5jjd.onrender.com/api/user/delete-product/${productId}`,
+      const response = await axios.post(
+        `https://olx-clone-backend-5jjd.onrender.com/api/user/delete-product`,
+        { productId },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       const updatedUser = {
         ...user,
-        productsadd: user?.productsadd?.filter(
-          (product) => product._id !== productId
-        ),
+        productsadd: user?.productsadd?.filter((product) => product._id !== productId),
       };
       if (response.data.success) {
         dispatch(setUser(updatedUser));

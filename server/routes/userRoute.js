@@ -10,8 +10,8 @@ const userRouter = express.Router();
 
 userRouter.get("/profile", authCheck, userProfile);
 
-userRouter.put("/profile", authCheck, updateProfile);
+userRouter.post("/profile", authCheck, updateProfile);
 
-userRouter.delete("/delete-product/:productId", authCheck, deleteProduct);
+userRouter.post("/delete-product", authCheck, deleteProduct);
 
 export default userRouter;
