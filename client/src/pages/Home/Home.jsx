@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../../components/Navbar/Navbar";
 import Cards from "../../components/Cards/Cards";
-import Footer from "../../components/Footer/Footer";
 import Banner from "../../components/Banner/Banner";
 import { useDispatch, useSelector } from "react-redux";
 import { allProducts } from "../../ReduxStore/Reducers/productSlice";
@@ -49,7 +47,6 @@ const Home = () => {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-[80vh]">
-      <Navbar />
       <Banner />
 
       {sortedProducts.length === 0 ? (
@@ -77,7 +74,6 @@ const Home = () => {
         ))}
       </div>
 
-      <Footer />
     </div>
   );
 };

@@ -25,11 +25,14 @@ const SignUp = () => {
     setMessage("");
 
     try {
-      const response = await fetch("https://olx-clone-backend-5jjd.onrender.com/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://olx-clone-backend-5jjd.onrender.com/api/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
       console.log(data, "signup");
@@ -47,13 +50,22 @@ const SignUp = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center h-screen">
-      <div className="border border-black p-6 rounded-lg bg-white shadow-lg w-full max-w-md">
-        <h2 className="text-center text-xl font-semibold">Sign Up</h2>
-        {message && <p className="text-center text-red-500">{message}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center px-2">
+      <div className="w-full max-w-[90%] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl bg-white p-4 sm:p-8 rounded-lg shadow-lg border border-gray-300">
+        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-gray-800">
+          Sign Up
+        </h2>
+        {message && (
+          <p className="text-center text-red-500 text-sm sm:text-base mb-4">
+            {message}
+          </p>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           <div>
-            <label htmlFor="username" className="block font-medium">
+            <label
+              htmlFor="username"
+              className="block text-gray-700 font-medium mb-1 text-sm sm:text-base"
+            >
               Username
             </label>
             <input
@@ -63,11 +75,14 @@ const SignUp = () => {
               placeholder="Username"
               onChange={handleChange}
               required
-              className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 bg-transparent text-sm sm:text-base"
             />
           </div>
           <div>
-            <label htmlFor="email" className="block font-medium">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-medium mb-1 text-sm sm:text-base"
+            >
               Email
             </label>
             <input
@@ -77,11 +92,14 @@ const SignUp = () => {
               placeholder="Email"
               onChange={handleChange}
               required
-              className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 bg-transparent text-sm sm:text-base"
             />
           </div>
           <div>
-            <label htmlFor="phone" className="block font-medium">
+            <label
+              htmlFor="phone"
+              className="block text-gray-700 font-medium mb-1 text-sm sm:text-base"
+            >
               Phone
             </label>
             <input
@@ -91,11 +109,14 @@ const SignUp = () => {
               placeholder="Phone"
               onChange={handleChange}
               required
-              className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 bg-transparent text-sm sm:text-base"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block font-medium">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-medium mb-1 text-sm sm:text-base"
+            >
               Password
             </label>
             <input
@@ -105,21 +126,21 @@ const SignUp = () => {
               placeholder="Password"
               onChange={handleChange}
               required
-              className="w-full border-b border-gray-300 outline-none focus:border-blue-500 bg-transparent py-1"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 bg-transparent text-sm sm:text-base"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-teal-900 text-white font-bold py-3 rounded hover:bg-white hover:text-teal-900 hover:border-2 hover:border-teal-900 transition"
+            className="w-full bg-teal-900 text-white font-bold py-3 rounded-md hover:bg-white hover:text-teal-900 hover:border-2 hover:border-teal-900 transition duration-300 text-sm sm:text-base"
             disabled={loading}
           >
             {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
-        <div className="text-center mt-4">
+        <div className="text-center mt-6 text-gray-600 text-xs sm:text-sm">
           Already have an account?{" "}
           <Link
-            to={"/"}
+            to="/"
             className="text-amber-700 font-semibold hover:text-amber-500"
           >
             Sign In

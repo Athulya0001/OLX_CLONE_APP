@@ -5,11 +5,23 @@ import { Link } from "react-router-dom";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.auth);
+
+  if (!user) {
+    return (
+      <div className="flex flex-col justify-between items-center w-full">
+        <div className="flex gap-x-4 justify-center items-center">
+          <img className="h-15 w-15 rounded-full" src={Profile} alt="Profile" />
+          <span className="text-xl">Guest</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col justify-between items-center w-full">
       <div className="flex gap-x-4 justify-center items-center">
         <img className="h-15 w-15 rounded-full" src={Profile} alt="Profile" />
-        <span className="text-xl">{user.username}</span>
+        <span className="text-xl">{user?.username}</span>
       </div>
       <div className="py-2 w-full">
         <Link to="/profile">

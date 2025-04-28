@@ -5,17 +5,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { setWishlist } from "../../ReduxStore/Reducers/authSlice";
 import { useMemo } from "react";
 
-
 const Cards = ({ product }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { token, user } = useSelector((state) => state.auth);
-  // const wishlist = useSelector((state) => state.auth.user?.wishlist || []);
   const wishlist = useMemo(() => user?.wishlist || [], [user?.wishlist]);
   const isWishlisted = wishlist.includes(product._id);
 
   const handleWishlist = async () => {
+    if (!token) {
+      navigate("/signin");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "https://olx-clone-backend-5jjd.onrender.com/products/wishlist",
@@ -26,7 +29,6 @@ const Cards = ({ product }) => {
       );
 
       if (response.data.success) {
-        console.log(response.data, "data");
         const updatedWishlist = isWishlisted
           ? wishlist.filter((id) => id !== product._id)
           : [...wishlist, product._id];
@@ -50,7 +52,13 @@ const Cards = ({ product }) => {
 
       <div
         className="flex justify-center w-full h-[140px] overflow-hidden"
-        onClick={() => navigate(`/product/${product._id}`)}
+        onClick={() => {
+          if (!token) {
+            navigate("/signin");
+          } else {
+            navigate(`/product/${product._id}`);
+          }
+        }}
       >
         {product.images?.length > 0 ? (
           <img
@@ -63,7 +71,6 @@ const Cards = ({ product }) => {
         )}
       </div>
 
-      {/* Product Details */}
       <div className="p-3 flex flex-col gap-2 text-center">
         <p className="text-xl font-bold text-[#000030]">
           &#x20B9; {product.price}
@@ -74,7 +81,6 @@ const Cards = ({ product }) => {
         </p>
       </div>
 
-      {/* Product Date */}
       <div className="flex justify-end text-xs text-gray-400 px-3 pb-2">
         {new Date(product.createdAt).toDateString()}
       </div>
