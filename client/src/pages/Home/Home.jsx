@@ -5,9 +5,9 @@ import Banner from "../../components/Banner/Banner";
 import { useDispatch, useSelector } from "react-redux";
 import { allProducts } from "../../ReduxStore/Reducers/productSlice";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading/Loading";
 
 const Home = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.product || { items: [] });
   const [sortOption, setSortOption] = useState("");
@@ -19,8 +19,9 @@ const Home = () => {
   }, []);
   async function fetchProducts() {
     try {
-      const response = await axios.get("https://olx-clone-backend-5jjd.onrender.com/products");
-      console.log(response);
+      const response = await axios.get(
+        "https://olx-clone-backend-5jjd.onrender.com/products"
+      );
       dispatch(allProducts(response.data));
     } catch (error) {
       console.log("error occured", error);
@@ -50,7 +51,7 @@ const Home = () => {
       <Banner />
 
       {sortedProducts.length === 0 ? (
-        <p className="py-6 text-md">Loading....</p>
+        <div><Loading/></div>
       ) : (
         <div className="flex justify-between items-center w-full px-6 py-3">
           <h3 className="text-xl">Fresh Recommendations</h3>
@@ -73,7 +74,6 @@ const Home = () => {
           <Cards key={product._id} product={product} />
         ))}
       </div>
-
     </div>
   );
 };

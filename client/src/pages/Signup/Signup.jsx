@@ -140,7 +140,7 @@ const SignUp = () => {
         <div className="text-center mt-6 text-gray-600 text-xs sm:text-sm">
           Already have an account?{" "}
           <Link
-            to="/"
+            to="/signin"
             className="text-amber-700 font-semibold hover:text-amber-500"
           >
             Sign In

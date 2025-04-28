@@ -6,6 +6,8 @@ import Logo from "../../assets/olx-logo.png";
 import {
   FaBars,
   FaHeart,
+  FaPlus,
+  FaSearch,
   FaSignInAlt,
   FaSignOutAlt,
   FaTimes,
@@ -97,7 +99,9 @@ const Navbar = () => {
       navigate("/post-category");
     } else {
       toast.error("Please login to post a product");
-      navigate("/");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
     }
     setMenuOpen(false);
   };
@@ -123,23 +127,26 @@ const Navbar = () => {
           <img src={Logo} alt="Logo" className="h-10" />
         </Link>
 
-        <div className="hidden md:flex items-center gap-4">
-          <form
-            onSubmit={handleSearchSubmit}
-            className="flex items-center border border-gray-400 rounded-md bg-white w-80"
+        <form
+          onSubmit={handleSearchSubmit}
+          className="hidden md:flex items-center border border-gray-400 rounded-md bg-white w-80"
+        >
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="outline-none border-none px-2 py-1 w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="ml-2 text-white bg-black px-3 py-3 h-full"
           >
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="outline-none border-none px-2 py-1 w-full"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button type="submit" className="ml-2 text-white bg-black px-3 py-3 h-full">
-              🔍
-            </button>
-          </form>
+            <FaSearch />
+          </button>
+        </form>
 
+        <div className="hidden md:flex items-center gap-4">
           <select className="px-3 py-2 border rounded-md">
             {languages.map((lang, i) => (
               <option key={i} value={lang}>
@@ -150,7 +157,11 @@ const Navbar = () => {
 
           <div className="relative" ref={profileMenuRef}>
             <button onClick={() => setDesktopProfileOpen(!desktopProfileOpen)}>
-              <img src={Profile} alt="Profile" className="h-10 w-10 rounded-full" />
+              <img
+                src={Profile}
+                alt="Profile"
+                className="h-10 w-10 rounded-full"
+              />
             </button>
             {desktopProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md p-2 z-50">
@@ -158,7 +169,10 @@ const Navbar = () => {
                 <hr className="my-2" />
                 {token ? (
                   <>
-                    <Link to="/wishlist" className="flex items-center gap-2 p-2 hover:bg-gray-100">
+                    <Link
+                      to="/wishlist"
+                      className="flex items-center gap-2 p-2 hover:bg-gray-100"
+                    >
                       <FaHeart className="text-red-500" />
                       <span>Wishlist</span>
                     </Link>
@@ -171,7 +185,10 @@ const Navbar = () => {
                     </button>
                   </>
                 ) : (
-                  <Link to="/" className="flex items-center gap-2 p-2 hover:bg-gray-100">
+                  <Link
+                    to="/signin"
+                    className="flex items-center gap-2 p-2 hover:bg-gray-100"
+                  >
                     <FaSignInAlt />
                     <span>Login</span>
                   </Link>
@@ -183,13 +200,16 @@ const Navbar = () => {
           <button onClick={handleSellClick}>
             <div className="border-3 border-r border-b border-amber-500 rounded-xl">
               <span className="bg-white text-black px-4 py-2 rounded-xl flex items-center border-3 border-t border-l border-blue-500">
-                ➕ <span className="ml-1">SELL</span>
+                <FaPlus /> <span className="ml-1">SELL</span>
               </span>
             </div>
           </button>
         </div>
 
-        <button className="md:hidden text-2xl" onClick={() => setMenuOpen(!menuOpen)}>
+        <button
+          className="md:hidden text-2xl"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </nav>
@@ -207,8 +227,11 @@ const Navbar = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button type="submit" className="ml-2 text-white bg-black px-3 py-3 h-full">
-              🔍
+            <button
+              type="submit"
+              className="ml-2 text-white bg-black px-3 py-3 h-full"
+            >
+              <FaSearch />
             </button>
           </form>
 
@@ -225,7 +248,11 @@ const Navbar = () => {
               onClick={() => setMobileProfileOpen(!mobileProfileOpen)}
               className="flex items-center w-full p-2 border rounded-md bg-white"
             >
-              <img src={Profile} alt="Profile" className="h-8 w-8 rounded-full mr-2" />
+              <img
+                src={Profile}
+                alt="Profile"
+                className="h-8 w-8 rounded-full mr-2"
+              />
               <span>Profile</span>
             </button>
             {mobileProfileOpen && (
@@ -234,7 +261,10 @@ const Navbar = () => {
                 <hr className="my-2" />
                 {token ? (
                   <>
-                    <Link to="/wishlist" className="block p-2 hover:bg-gray-100">
+                    <Link
+                      to="/wishlist"
+                      className="block p-2 hover:bg-gray-100"
+                    >
                       <FaHeart className="text-red-500" /> <span>Wishlist</span>
                     </Link>
                     <button
@@ -246,7 +276,10 @@ const Navbar = () => {
                     </button>
                   </>
                 ) : (
-                  <Link to="/" className="flex items-center gap-2 p-2 hover:bg-gray-100">
+                  <Link
+                    to="/"
+                    className="flex items-center gap-2 p-2 hover:bg-gray-100"
+                  >
                     <FaSignInAlt />
                     <span>Login</span>
                   </Link>
@@ -258,7 +291,7 @@ const Navbar = () => {
           <button onClick={handleSellClick} className="w-full mt-2">
             <div className="border-3 border-r border-b border-amber-500 rounded-xl">
               <span className="bg-white text-black px-4 py-2 rounded-xl flex justify-center items-center border-3 border-t border-l border-blue-500">
-                ➕ <span className="ml-1">SELL</span>
+                <FaPlus /> <span className="ml-1">SELL</span>
               </span>
             </div>
           </button>

@@ -4,6 +4,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { setWishlist } from "../../ReduxStore/Reducers/authSlice";
 import { useMemo } from "react";
+import {toast} from 'react-toastify';
 
 const Cards = ({ product }) => {
   const dispatch = useDispatch();
@@ -54,7 +55,10 @@ const Cards = ({ product }) => {
         className="flex justify-center w-full h-[140px] overflow-hidden"
         onClick={() => {
           if (!token) {
-            navigate("/signin");
+            toast.warn("Please Signin to continue")
+            setTimeout(() => {
+              navigate("/signin")
+            }, 2000);
           } else {
             navigate(`/product/${product._id}`);
           }

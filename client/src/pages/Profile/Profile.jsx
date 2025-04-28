@@ -13,8 +13,6 @@ const Profile = () => {
 
   const { items } = useSelector((state) => state.product);
 
-  console.log(items, "items inside===");
-
   const [userProducts, setUserProducts] = useState([]);
   const [formData, setFormData] = useState({
     username: user?.username || "",
@@ -26,12 +24,10 @@ const Profile = () => {
       const productDetails = user.productsadd.map((productId) =>
         items.find((item) => item._id === productId)
       );
-      console.log(productDetails, "userproducts======");
       setUserProducts(productDetails);
     }
   }, []);
 
-  // update details
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -42,9 +38,7 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(response.data, "data=========");
       dispatch(setUser(response.data));
-      console.log(user, "updated user======================");
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -61,7 +55,6 @@ const Profile = () => {
     fetchProducts();
   }, []);
 
-  // fetching products
   async function fetchProducts() {
     try {
       const response = await axios.get("https://olx-clone-backend-5jjd.onrender.com/products");
@@ -72,7 +65,6 @@ const Profile = () => {
     }
   }
 
-  // delete product
   const handleDeleteProduct = async (productId) => {
     try {
       const response = await axios.delete(
@@ -81,7 +73,6 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(response, "res==========");
       const updatedUser = {
         ...user,
         productsadd: user?.productsadd?.filter(
@@ -89,7 +80,6 @@ const Profile = () => {
         ),
       };
       if (response.data.success) {
-        console.log(updatedUser, "update");
         dispatch(setUser(updatedUser));
       }
     } catch (error) {
@@ -103,7 +93,6 @@ const Profile = () => {
       <div className="mt-[80px]">
         <h1 className="text-2xl font-bold text-center mb-4">My Profile</h1>
 
-        {/* Profile Details */}
         <div className="p-4 border rounded-md mb-6">
           <h2 className="text-xl font-bold mb-2">Profile Information</h2>
           <form onSubmit={handleUpdate} className="space-y-4">

@@ -35,6 +35,7 @@ const SignIn = () => {
 
         dispatch(login({ user: data.user, token: data.token }));
         toast.success("Login successful! Welcome back.");
+        navigate("/")
       }
     } catch (error) {
       console.error("Login error:", error);

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaHeart } from "react-icons/fa";
+import Loading from "../../components/Loading/Loading";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -41,7 +42,6 @@ const ProductDetails = () => {
             }
           );
           setRequestSent(response.data.requestedProducts.includes(id));
-          console.log(response.data.requestedProducts, "============");
         } catch (error) {
           console.error("Error checking request status:", error);
         }
@@ -75,7 +75,7 @@ const ProductDetails = () => {
     }
   };
 
-  if (!product) return <p className="text-center text-xl">Loading...</p>;
+  if (!product) return <div><Loading/></div>;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
