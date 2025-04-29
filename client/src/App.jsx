@@ -30,9 +30,10 @@ const App = () => {
   }, [token, dispatch]);
 
   useEffect(() => {
-    if (!token && 
-      location.pathname !== "/signin" && 
-      location.pathname !== "/signup" && 
+    if (
+      !token &&
+      location.pathname !== "/signin" &&
+      location.pathname !== "/signup" &&
       location.pathname !== "/"
     ) {
       navigate("/signin");
@@ -63,7 +64,7 @@ const App = () => {
   };
 
   return (
-    <div className="mx-0 sm:mx-4 md:mx-8 lg:mx-16">
+    <div className="">
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -75,17 +76,19 @@ const App = () => {
       />
       <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/search-result" element={<SearchResults />} />
-        <Route path="/verify-otp" element={<OtpVerification />} />
-        <Route path="/post-category" element={<SelectCategory />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
+      <div className="mx-0 sm:mx-4 md:mx-8 lg:mx-16">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/search-result" element={<SearchResults />} />
+          <Route path="/verify-otp" element={<OtpVerification />} />
+          <Route path="/post-category" element={<SelectCategory />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </div>
 
       <Footer />
     </div>

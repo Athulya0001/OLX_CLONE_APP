@@ -2,9 +2,9 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 shadow-md w-full mt-6 p-6 relative bottom-0 left-0 right-0">
-      <div className="container mx-auto flex flex-wrap justify-between items-start gap-8 md:flex-nowrap">
-        <div className="w-full md:w-1/4">
+    <footer className="bg-gray-100 shadow-md w-full mt-6 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-20 2xl:px-32">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+        <div>
           <h3 className="text-lg font-semibold text-gray-800">About</h3>
           <p className="text-sm text-gray-600 mt-2">
             Your go-to marketplace for buying and selling products. Find great
@@ -12,7 +12,7 @@ const Footer = () => {
           </p>
         </div>
 
-        <div className="w-full md:w-1/4">
+        <div>
           <h3 className="text-lg font-semibold text-gray-800">Help</h3>
           <ul className="text-sm text-gray-600 mt-2 space-y-2">
             <li>
@@ -38,7 +38,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="w-full md:w-1/4">
+        <div>
           <h3 className="text-lg font-semibold text-gray-800">Features</h3>
           <ul className="text-sm text-gray-600 mt-2 space-y-2">
             <li>
@@ -59,7 +59,7 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="w-full md:w-1/4">
+        <div>
           <h3 className="text-lg font-semibold text-gray-800">Follow Us</h3>
           <div className="flex items-center space-x-4 mt-2">
             <a href="#" className="text-gray-700 hover:text-blue-500">
@@ -72,6 +72,7 @@ const Footer = () => {
                 <path d="M22.675 0h-21.35C.595 0 0 .597 0 1.33v21.341C0 23.402.595 24 1.325 24h11.495v-9.294H9.288v-3.62h3.533V8.411c0-3.506 2.134-5.416 5.252-5.416 1.51 0 2.804.112 3.179.162v3.69l-2.182.001c-1.712 0-2.047.815-2.047 2.008v2.631h4.09l-.534 3.62h-3.556V24h6.98C23.405 24 24 23.402 24 22.671V1.33C24 .597 23.405 0 22.675 0z" />
               </svg>
             </a>
+
             <a href="#" className="text-gray-700 hover:text-blue-500">
               <svg
                 className="h-5 w-5"
@@ -82,6 +83,7 @@ const Footer = () => {
                 <path d="M24 4.557a9.993 9.993 0 01-2.828.775 4.934 4.934 0 002.165-2.723 9.865 9.865 0 01-3.127 1.184A4.92 4.92 0 0016.616 3c-2.713 0-4.918 2.205-4.918 4.917 0 .385.045.76.126 1.121C7.691 8.886 4.064 6.764 1.64 3.725a4.882 4.882 0 00-.667 2.475c0 1.708.87 3.216 2.188 4.099a4.904 4.904 0 01-2.224-.616v.061c0 2.385 1.698 4.374 3.95 4.827a4.903 4.903 0 01-2.216.084 4.927 4.927 0 004.6 3.417 9.866 9.866 0 01-6.102 2.104c-.396 0-.79-.023-1.175-.07A13.945 13.945 0 007.557 21c9.073 0 14.036-7.521 14.036-14.035 0-.214-.004-.428-.014-.64A9.998 9.998 0 0024 4.557z" />
               </svg>
             </a>
+
             <a href="#" className="text-gray-700 hover:text-blue-500">
               <svg
                 className="h-5 w-5"
@@ -94,6 +96,10 @@ const Footer = () => {
             </a>
           </div>
         </div>
+      </div>
+
+      <div className="text-center text-sm text-gray-500 mt-10">
+        &copy; {new Date().getFullYear()} YourMarketplace. All rights reserved.
       </div>
     </footer>
   );

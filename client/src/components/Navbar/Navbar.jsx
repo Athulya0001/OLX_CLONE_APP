@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { token } = useSelector((state) => state.auth);
+  const { token, user } = useSelector((state) => state.auth);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -277,7 +277,7 @@ const Navbar = () => {
                   </>
                 ) : (
                   <Link
-                    to="/"
+                    to="/signin"
                     className="flex items-center gap-2 p-2 hover:bg-gray-100"
                   >
                     <FaSignInAlt />

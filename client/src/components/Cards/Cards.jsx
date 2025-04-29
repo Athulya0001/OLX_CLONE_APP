@@ -16,7 +16,10 @@ const Cards = ({ product }) => {
 
   const handleWishlist = async () => {
     if (!token) {
-      navigate("/signin");
+      toast.warning("Please signin to continue")
+      setTimeout(() => {
+        navigate("/signin")
+      }, 2000);
       return;
     }
 
