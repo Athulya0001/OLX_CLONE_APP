@@ -1,23 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaHeart } from "react-icons/fa";
 import Loading from "../../components/Loading/Loading";
+import { setWishlist } from "../../ReduxStore/Reducers/authSlice";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [requestSent, setRequestSent] = useState(false);
+  const [showFullDesc, setShowFullDesc] = useState(false);
+
   const { user, token } = useSelector((state) => state.auth);
-
-  const [userwishlist, setUserWishlist] = useState([]);
-
   const wishlist = useMemo(() => user?.wishlist || [], [user?.wishlist]);
   const isWishlisted = wishlist.includes(id);
-  console.log(wishlist, "wishlist");
+
+  const truncateText = (text, wordLimit = 30) => {
+    const words = text.split(" ");
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(" ") + "...";
+  };
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -25,7 +34,6 @@ const ProductDetails = () => {
           `https://olx-clone-backend-5jjd.onrender.com/products/${id}`
         );
         setProduct(response.data.product);
-        console.log(product, "product");
         setMainImage(response.data.product.images[0]);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -52,6 +60,54 @@ const ProductDetails = () => {
     checkRequestStatus();
   }, [id, user]);
 
+  const handleWishlist = async () => {
+    if (!token) {
+      toast.warning("Please signin to continue");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "https://olx-clone-backend-5jjd.onrender.com/products/wishlist",
+        { productId: id },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.data.success) {
+        const updatedWishlist = isWishlisted
+          ? wishlist.filter((pid) => pid !== id)
+          : [...wishlist, id];
+
+        dispatch(setWishlist(updatedWishlist));
+      }
+
+      toast.success(
+        isWishlisted
+          ? "Product removed from wishlist"
+          : "Product added to wishlist",
+        {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          draggable: false,
+          toastStyle: {
+            background: isWishlisted ? "#f44336" : "#4caf50",
+            color: "white",
+            fontWeight: "bold",
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
+    }
+  };
+
   const fetchRequest = async (ownerId) => {
     try {
       const response = await axios.post(
@@ -64,23 +120,23 @@ const ProductDetails = () => {
         }
       );
 
-      const data = response.data;
-      if (data.success) {
+      if (response.data.success) {
         setRequestSent(true);
-        toast.success(data.message);
+        toast.success(response.data.message);
       }
     } catch (error) {
       console.error("Error sending request:", error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong.");
     }
   };
 
-  if (!product)
+  if (!product) {
     return (
       <div>
         <Loading />
       </div>
     );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -88,11 +144,17 @@ const ProductDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <div className="relative">
-              <FaHeart
-                className={`absolute top-2 right-2 text-2xl transition-colors duration-300 ${
-                  isWishlisted ? "text-red-500" : "text-gray-400"
-                }`}
-              />
+              <button
+                onClick={handleWishlist}
+                className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md"
+              >
+                <FaHeart
+                  className={`text-2xl transition-colors duration-300 ${
+                    isWishlisted ? "text-red-500" : "text-gray-400"
+                  }`}
+                />
+              </button>
+
               <img
                 src={`https://olx-clone-backend-5jjd.onrender.com${mainImage}`}
                 alt={product.title}
@@ -135,7 +197,19 @@ const ProductDetails = () => {
                   Description
                 </h3>
                 <hr />
-                <p className="mt-2">{product.description}</p>
+                <p className="mt-2 text-gray-800">
+                  {showFullDesc
+                    ? product.description
+                    : truncateText(product.description, 30)}
+                </p>
+                {product.description.split(" ").length > 30 && (
+                  <button
+                    onClick={() => setShowFullDesc(!showFullDesc)}
+                    className="text-blue-600 hover:underline mt-1 text-sm"
+                  >
+                    {showFullDesc ? "Show Less" : "Show More"}
+                  </button>
+                )}
               </div>
 
               <div className="text-sm text-gray-500 mt-4">
