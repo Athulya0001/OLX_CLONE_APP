@@ -12,6 +12,26 @@ export const registerUser = async (req, res) => {
   const { username, email, password, phone } = req.body;
 
   try {
+    const phoneRegex = /^[0-9]{10}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+
+    if (!phoneRegex.test(phone)) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Invalid phone number. Must be 10 digits.",
+        });
+    }
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password must be at least 6 characters and include 1 uppercase letter, 1 number, and 1 special character.",
+      });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res
@@ -19,7 +39,7 @@ export const registerUser = async (req, res) => {
         .json({ success: false, message: "User already exists" });
     }
 
-    const otp = crypto.randomInt(100000, 999999).toString();
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -154,12 +174,10 @@ export const request = async (req, res) => {
     }
 
     if (user.requestedProducts.includes(id)) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "You have already requested details for this product.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "You have already requested details for this product.",
+      });
     }
 
     const transporter = nodemailer.createTransport({
@@ -189,21 +207,17 @@ export const request = async (req, res) => {
     user.requestedProducts.push(id);
     await user.save();
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Request sent successfully",
-        productId: id,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Request sent successfully",
+      productId: id,
+    });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error sending request",
-        error: error.message,
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Error sending request",
+      error: error.message,
+    });
   }
 };
 

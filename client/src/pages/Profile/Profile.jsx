@@ -27,6 +27,13 @@ const Profile = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      alert("Invalid phone number. Must be exactly 10 digits.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "https://olx-clone-backend-5jjd.onrender.com/api/user/profile",
@@ -54,7 +61,9 @@ const Profile = () => {
 
   async function fetchProducts() {
     try {
-      const response = await axios.get("https://olx-clone-backend-5jjd.onrender.com/products");
+      const response = await axios.get(
+        "https://olx-clone-backend-5jjd.onrender.com/products"
+      );
       dispatch(allProducts(response.data));
     } catch (error) {
       console.log("Error fetching products", error);
@@ -72,7 +81,9 @@ const Profile = () => {
       );
       const updatedUser = {
         ...user,
-        productsadd: user?.productsadd?.filter((product) => product._id !== productId),
+        productsadd: user?.productsadd?.filter(
+          (product) => product._id !== productId
+        ),
       };
       if (response.data.success) {
         dispatch(setUser(updatedUser));
@@ -84,7 +95,6 @@ const Profile = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg rounded-md">
-      <Navbar />
       <div className="mt-[80px]">
         <h1 className="text-2xl font-bold text-center mb-4">My Profile</h1>
 
@@ -107,7 +117,14 @@ const Profile = () => {
                 type="text"
                 name="phone"
                 value={formData?.phone || user?.phone}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const onlyDigits = e.target.value.replace(/\D/g, "");
+                  setFormData((prev) => ({
+                    ...prev,
+                    phone: onlyDigits,
+                  }));
+                }}
+                maxLength={10}
                 className="w-full border p-2 rounded-md"
               />
             </div>

@@ -10,13 +10,24 @@ import Loading from "../../components/Loading/Loading";
 const Home = () => {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.product || { items: [] });
-  const [sortOption, setSortOption] = useState("");
   const { user } = useSelector((state) => state.auth);
-  console.log(user);
+  const [sortOption, setSortOption] = useState("");
+  const [visibleRows, setVisibleRows] = useState(2);
+  const [cardsPerRow, setCardsPerRow] = useState(4);
 
   useEffect(() => {
     fetchProducts();
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleResize = () => {
+    if (window.innerWidth < 640) setCardsPerRow(1);
+    else if (window.innerWidth < 1024) setCardsPerRow(2);
+    else setCardsPerRow(4); // large screens
+  };
+
   async function fetchProducts() {
     try {
       const response = await axios.get(
@@ -24,13 +35,14 @@ const Home = () => {
       );
       dispatch(allProducts(response.data));
     } catch (error) {
-      console.log("error occured", error);
+      console.log("error occurred", error);
     }
   }
+
   const filteredProducts = user
     ? items.filter((product) => product.owner !== user._id)
     : items;
-  
+
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortOption) {
       case "newest":
@@ -46,6 +58,10 @@ const Home = () => {
     }
   });
 
+  const visibleCount = visibleRows * cardsPerRow;
+  const visibleProducts = sortedProducts.slice(0, visibleCount);
+  const isAllShown = visibleCount >= sortedProducts.length;
+
   return (
     <div className="flex flex-col justify-center items-center min-h-[80vh]">
       <Banner />
@@ -56,11 +72,11 @@ const Home = () => {
         </div>
       ) : (
         <div className="flex justify-between items-center w-full px-6 py-3">
-          <h3 className="text-xl">Fresh Recommendations</h3>
+          <h3 className="text-md md:text-xl">Fresh Recommendations</h3>
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
-            className="border px-2 rounded bg-white"
+            className="border px-0 md:px-2 rounded bg-white"
           >
             <option value="">Sort By</option>
             <option value="newest">Newest</option>
@@ -72,10 +88,23 @@ const Home = () => {
       )}
 
       <div className="flex flex-wrap items-center justify-center gap-10">
-        {sortedProducts.map((product) => (
+        {visibleProducts.map((product) => (
           <Cards key={product._id} product={product} />
         ))}
       </div>
+
+      {sortedProducts.length > cardsPerRow * 2 && (
+        <div className="mt-6">
+          <button
+            onClick={() =>
+              setVisibleRows(isAllShown ? 2 : visibleRows + 1)
+            }
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            {isAllShown ? "View Less" : "View More"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -24,6 +24,21 @@ const SignUp = () => {
     setLoading(true);
     setMessage("");
 
+    const phoneRegex = /^[0-9]{10}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+
+    if (!phoneRegex.test(formData.phone)) {
+      setLoading(false);
+      return setMessage("Phone number must be exactly 10 digits.");
+    }
+
+    if (!passwordRegex.test(formData.password)) {
+      setLoading(false);
+      return setMessage(
+        "Password must be at least 6 characters and include 1 uppercase letter, 1 number, and 1 special character."
+      );
+    }
+
     try {
       const response = await fetch(
         "https://olx-clone-backend-5jjd.onrender.com/api/auth/signup",
@@ -38,7 +53,7 @@ const SignUp = () => {
       console.log(data, "signup");
 
       if (data.success) {
-        setMessage("OTP Send to your email. Please Verify...");
+        setMessage("OTP sent to your email. Please verify...");
         navigate("/verify-otp", { state: formData });
       } else {
         setMessage(data.message);
@@ -46,6 +61,8 @@ const SignUp = () => {
     } catch (error) {
       console.error("Signup Error:", error);
       setMessage(error.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,7 +123,9 @@ const SignUp = () => {
               type="tel"
               id="phone"
               name="phone"
-              placeholder="Phone"
+              placeholder="10-digit phone"
+              pattern="[0-9]{10}"
+              title="Phone number must be 10 digits"
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 bg-transparent text-sm sm:text-base"
@@ -124,6 +143,8 @@ const SignUp = () => {
               id="password"
               name="password"
               placeholder="Password"
+              pattern="(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}"
+              title="Min 6 chars, 1 uppercase, 1 number, 1 special character"
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 bg-transparent text-sm sm:text-base"

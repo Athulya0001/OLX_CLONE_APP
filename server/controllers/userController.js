@@ -17,6 +17,15 @@ export const userProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { username, phone } = req.body;
+    const phoneRegex = /^[0-9]{10}$/;
+
+    if (!phoneRegex.test(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid phone number. Must be 10 digits.",
+      });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
       { username, phone },
@@ -42,7 +51,9 @@ export const deleteProduct = async (req, res) => {
 
     await Product.findByIdAndDelete(productId);
 
-    return res.status(200).json({ success: true, message: "Product deleted successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Product deleted successfully" });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Server Error" });
   }

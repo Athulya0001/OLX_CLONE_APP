@@ -83,22 +83,22 @@ const ProductDetails = () => {
     );
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <div className="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-        <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-          <div className="relative">
-            <FaHeart
-              className={`transition-colors duration-300 ${
-                isWishlisted ? "text-red-500" : "text-gray-400"
-              }`}
-            />
-            <img
-              src={`https://olx-clone-backend-5jjd.onrender.com${mainImage}`}
-              alt={product.title}
-              className="w-full h-96 object-cover rounded-lg shadow-md"
-            />
+    <div className="body min-h-screen">
+      <div className="all-info max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="product-info">
+          <div className="gallery-padding">
+            <div className="relative">
+              <FaHeart
+                className={`absolute top-2 right-2 text-2xl transition-colors duration-300 ${
+                  isWishlisted ? "text-red-500" : "text-gray-400"
+                }`}
+              />
+              <img
+                src={`https://olx-clone-backend-5jjd.onrender.com${mainImage}`}
+                alt={product.title}
+                className="w-full h-80 sm:h-96 object-cover rounded-lg shadow-md"
+              />
+            </div>
 
             <div className="flex gap-2 mt-3 overflow-x-auto">
               {product.images.map((img, index) => (
@@ -115,37 +115,57 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          {/* Right - Product Details */}
-          <div className="space-y-4">
-            <p className="text-2xl font-bold text-green-600">
-              &#x20B9; {product.price}
-            </p>
-            <p className="text-gray-700">{product.description}</p>
+          <div className="product-name text-xl sm:text-2xl md:text-3xl pt-4">
+            {product.title}
+          </div>
 
-            <div className="text-sm text-gray-500">
-              <span className="block">Category: {product.category}</span>
-              <span className="block">
-                Posted on: {new Date(product.createdAt).toDateString()}
-              </span>
-            </div>
+          <div className="sub-heading">Details</div>
+          <hr />
+          <div className="details">
+            <h3>Model/Company: {product.brand || "N/A"}</h3>
+          </div>
+          <div className="details pb-5">
+            <h3>How old is the item: {product.age || "Unknown"}</h3>
+          </div>
 
-            <div>
-              {requestSent ? (
-                <button
-                  className="w-full py-3 bg-gray-400 text-white font-bold rounded-lg cursor-not-allowed"
-                  disabled
-                >
-                  Requested
-                </button>
-              ) : (
-                <button
-                  className="w-full py-3 bg-[#002f34] text-white font-bold rounded-lg hover:bg-white hover:text-[#002f34] hover:border-2 hover:border-[#002f34] transition-all"
-                  onClick={() => fetchRequest(product.owner)}
-                >
-                  Request Details
-                </button>
-              )}
-            </div>
+          <hr />
+          <div className="sub-heading">Description</div>
+          <p className="details">{product.description}</p>
+
+          <div className="text-sm text-gray-400 mt-4">
+            <span className="block">Category: {product.category}</span>
+            <span className="block">
+              Posted on: {new Date(product.createdAt).toDateString()}
+            </span>
+          </div>
+        </div>
+
+        <div className="product-card mt-8 sm:mt-0">
+          <div className="amount">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/724/724933.png"
+              alt="Rupee"
+              className="rupee-icon"
+            />
+            <span className="text-3xl font-bold">₹ {product.price}</span>
+          </div>
+
+          <div className="btn-align">
+            {requestSent ? (
+              <button
+                className="button bg-gray-400 text-white cursor-not-allowed"
+                disabled
+              >
+                Requested
+              </button>
+            ) : (
+              <button
+                className="button hover:border-black"
+                onClick={() => fetchRequest(product.owner)}
+              >
+                Request Details
+              </button>
+            )}
           </div>
         </div>
       </div>
