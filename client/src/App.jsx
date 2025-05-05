@@ -15,6 +15,7 @@ import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Wishlist from "./pages/GetWishlist/Wishlist";
 import Profile from "./pages/Profile/Profile";
 import { setUser } from "./ReduxStore/Reducers/authSlice";
+import Cards from "./components/Cards/Cards";
 
 const App = () => {
   const dispatch = useDispatch();

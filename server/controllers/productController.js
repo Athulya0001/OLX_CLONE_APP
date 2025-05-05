@@ -2,29 +2,29 @@ import Product from "../models/productModel.js";
 import User from "../models/userModel.js";
 import { categories } from "../utils/categories.js";
 
+// all products
 export const allProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.json(products);
+    return res.json(products);
   } catch (err) {
-    res
+    return res
       .status(500)
       .json({ message: "Failed to fetch products", error: err.message });
   }
 };
 
+// all categories
 export const category = async (req, res) => {
   try {
-    res.json(categories);
+    return res.json(categories);
   } catch (error) {
-    res.status(400).json({ message: "Error getting categories", error });
+    return res.status(400).json({ message: "Error getting categories", error });
   }
 };
 
 // add products
 export const addProduct = async (req, res) => {
-  console.log("Received Body:", req.body);
-  console.log("Received Files:", req.files);
 
   const { title, category, price, description, owner } = req.body;
   try {
@@ -55,7 +55,7 @@ export const addProduct = async (req, res) => {
     user.productsadd.push(postProduct._id);
     await user.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Product added successfully!",
       product: postProduct,
@@ -72,6 +72,7 @@ export const addProduct = async (req, res) => {
   }
 };
 
+// product details
 export const productDetails = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -128,8 +129,8 @@ export const wishlist = async (req, res) => {
   }
 };
 
+// search products
 export const searchProducts = async (req, res) => {
-  console.log(req.query);
   const { q } = req.query;
   try {
     const products = await Product.find({

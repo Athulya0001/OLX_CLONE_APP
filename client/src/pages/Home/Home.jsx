@@ -27,10 +27,10 @@ const Home = () => {
       console.log("error occured", error);
     }
   }
-  const filteredProducts = items.filter(
-    (product) => product.owner !== user?._id
-  );
-
+  const filteredProducts = user
+    ? items.filter((product) => product.owner !== user._id)
+    : items;
+  
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortOption) {
       case "newest":
@@ -51,7 +51,9 @@ const Home = () => {
       <Banner />
 
       {sortedProducts.length === 0 ? (
-        <div><Loading/></div>
+        <div>
+          <Loading />
+        </div>
       ) : (
         <div className="flex justify-between items-center w-full px-6 py-3">
           <h3 className="text-xl">Fresh Recommendations</h3>
