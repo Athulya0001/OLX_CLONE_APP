@@ -185,15 +185,6 @@ const ProductDetails = () => {
 
               <div className="mt-4">
                 <h3 className="text-md font-medium text-gray-700 mb-1">
-                  Details
-                </h3>
-                <hr />
-                <p className="mt-2">Model/Company: {product.brand || "N/A"}</p>
-                <p>How old is the item: {product.age || "Unknown"}</p>
-              </div>
-
-              <div className="mt-4">
-                <h3 className="text-md font-medium text-gray-700 mb-1">
                   Description
                 </h3>
                 <hr />
