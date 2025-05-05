@@ -83,10 +83,10 @@ const ProductDetails = () => {
     );
 
   return (
-    <div className="body min-h-screen">
-      <div className="all-info max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="product-info">
-          <div className="gallery-padding">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
             <div className="relative">
               <FaHeart
                 className={`absolute top-2 right-2 text-2xl transition-colors duration-300 ${
@@ -115,57 +115,58 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          <div className="product-name text-xl sm:text-2xl md:text-3xl pt-4">
-            {product.title}
-          </div>
+          <div className="flex flex-col justify-between">
+            <div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold pt-4 lg:pt-0">
+                {product.title}
+              </h2>
 
-          <div className="sub-heading">Details</div>
-          <hr />
-          <div className="details">
-            <h3>Model/Company: {product.brand || "N/A"}</h3>
-          </div>
-          <div className="details pb-5">
-            <h3>How old is the item: {product.age || "Unknown"}</h3>
-          </div>
+              <div className="mt-4">
+                <h3 className="text-md font-medium text-gray-700 mb-1">
+                  Details
+                </h3>
+                <hr />
+                <p className="mt-2">Model/Company: {product.brand || "N/A"}</p>
+                <p>How old is the item: {product.age || "Unknown"}</p>
+              </div>
 
-          <hr />
-          <div className="sub-heading">Description</div>
-          <p className="details">{product.description}</p>
+              <div className="mt-4">
+                <h3 className="text-md font-medium text-gray-700 mb-1">
+                  Description
+                </h3>
+                <hr />
+                <p className="mt-2">{product.description}</p>
+              </div>
 
-          <div className="text-sm text-gray-400 mt-4">
-            <span className="block">Category: {product.category}</span>
-            <span className="block">
-              Posted on: {new Date(product.createdAt).toDateString()}
-            </span>
-          </div>
-        </div>
+              <div className="text-sm text-gray-500 mt-4">
+                <p>Category: {product.category}</p>
+                <p>Posted on: {new Date(product.createdAt).toDateString()}</p>
+              </div>
+            </div>
 
-        <div className="product-card mt-8 sm:mt-0">
-          <div className="amount">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/724/724933.png"
-              alt="Rupee"
-              className="rupee-icon"
-            />
-            <span className="text-3xl font-bold">₹ {product.price}</span>
-          </div>
+            <div className="mt-6 lg:mt-0">
+              <div className="text-3xl font-bold text-gray-800 mb-4">
+                ₹ {product.price}
+              </div>
 
-          <div className="btn-align">
-            {requestSent ? (
-              <button
-                className="button bg-gray-400 text-white cursor-not-allowed"
-                disabled
-              >
-                Requested
-              </button>
-            ) : (
-              <button
-                className="button hover:border-black"
-                onClick={() => fetchRequest(product.owner)}
-              >
-                Request Details
-              </button>
-            )}
+              <div>
+                {requestSent ? (
+                  <button
+                    className="w-full bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed"
+                    disabled
+                  >
+                    Requested
+                  </button>
+                ) : (
+                  <button
+                    className="w-full bg-[#0096ff] text-white px-4 py-2 rounded hover:bg-[#007acc] transition"
+                    onClick={() => fetchRequest(product.owner)}
+                  >
+                    Request Details
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

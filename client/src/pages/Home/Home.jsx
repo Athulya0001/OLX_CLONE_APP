@@ -71,12 +71,12 @@ const Home = () => {
           <Loading />
         </div>
       ) : (
-        <div className="flex justify-between items-center w-full px-6 py-3">
+        <div className="flex flex-col md:flex-row md:justify-between items-center w-full px-6 py-3 gap-2">
           <h3 className="text-md md:text-xl">Fresh Recommendations</h3>
           <select
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value)}
-            className="border px-0 md:px-2 rounded bg-white"
+            className="border px-2 py-1 rounded bg-white"
           >
             <option value="">Sort By</option>
             <option value="newest">Newest</option>
@@ -87,7 +87,8 @@ const Home = () => {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center justify-center gap-10">
+      {/* Responsive Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 px-4 sm:px-6 lg:px-8 w-full">
         {visibleProducts.map((product) => (
           <Cards key={product._id} product={product} />
         ))}
@@ -96,9 +97,7 @@ const Home = () => {
       {sortedProducts.length > cardsPerRow * 2 && (
         <div className="mt-6">
           <button
-            onClick={() =>
-              setVisibleRows(isAllShown ? 2 : visibleRows + 1)
-            }
+            onClick={() => setVisibleRows(isAllShown ? 2 : visibleRows + 1)}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
           >
             {isAllShown ? "View Less" : "View More"}
