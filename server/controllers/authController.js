@@ -52,6 +52,7 @@ export const registerUser = async (req, res) => {
       .status(200)
       .json({ success: true, message: "OTP sent to your email" });
   } catch (error) {
+    console.error("Signup error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };

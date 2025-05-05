@@ -12,7 +12,7 @@ const images = [Banner1, Banner2, Banner3, Banner4];
 
 const Banner = () => {
   return (
-    <div className="w-full max-w-screen-lg mx-auto mt-[80px] rounded-lg overflow-hidden shadow-lg">
+    <div className="w-full max-w-screen-lg mx-auto rounded-lg overflow-hidden shadow-lg">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={50}

@@ -77,7 +77,7 @@ const App = () => {
       />
       <Navbar />
 
-      <div className="mx-0 sm:mx-4 md:mx-8 lg:mx-16">
+      <div className="mt-[82px] mx-0 sm:mx-4 md:mx-8 lg:mx-16">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<Signin />} />
