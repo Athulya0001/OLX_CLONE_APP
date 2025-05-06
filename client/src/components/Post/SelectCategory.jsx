@@ -80,29 +80,6 @@ const SelectCategory = () => {
 
   return (
     <div>
-      <header>
-        <div className="bg-gray-100 p-3">
-          <Link to={"/"}>
-            <button>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="50"
-                height="50"
-                viewBox="0 0 50 50"
-                className="text-gray-600"
-              >
-                <path
-                  d="M30 15 L20 25 L30 35"
-                  stroke="black"
-                  strokeWidth="4"
-                  fill="none"
-                />
-              </svg>
-            </button>
-          </Link>
-        </div>
-      </header>
-
       <div className="max-w-md mx-auto mt-10 p-6 border border-gray-300 rounded-lg shadow-lg">
         <h2 className="text-xl font-bold text-gray-800 text-center mb-4">
           POST YOUR AD
